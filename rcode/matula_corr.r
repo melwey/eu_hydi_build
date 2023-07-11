@@ -6,7 +6,7 @@
 # general
 # profile_id
 # general[general$PROFILE_ID %in% general$PROFILE_ID[duplicated(general$PROFILE_ID)],1:5]
-general1 <- general1[!duplicated(general$PROFILE_ID),]
+general1 <- general1[!duplicated(general$PROFILE_ID), ]
 lc <- general1$LC_L1
 lc1 <- substr(lc,1,1)
 lc2 <- substr(lc,1,2)
@@ -55,5 +55,5 @@ psize1 <- psize.checks(psize1,basic1$SAMPLE_ID,meth1$CODE_M)
 ret1 <- ret.checks(ret1,basic1$SAMPLE_ID,meth1$CODE_M)
 
 # cond
-cond1 <- cond[cond$COND!=-999 & cond$K_INV_P1!=-999,]
-cond1 <- cond.checks(cond1,basic1$SAMPLE_ID,meth1$CODE_M)
+cond1 <- cond[cond$COND != -999 & cond$K_INV_P1 != -999,]
+cond1 <- cond.checks(cond1, basic1$SAMPLE_ID, meth1$CODE_M)

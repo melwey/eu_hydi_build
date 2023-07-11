@@ -1,5 +1,5 @@
 # Basic statistics on EU-HYDI
-load("HYDI_SOURCE_nd_qa3.Rdata")
+load("../output/HYDI_SOURCE_nd_qa3.Rdata")
 hydi.na <- lapply(hydi,function(tbl){replace(tbl,tbl==-999 | tbl=="ND",NA)})
 attach(hydi.na)
 
@@ -9,17 +9,11 @@ Np <- nrow(GENERAL)
 print(paste("Number of entries:",Np))
 print("Minimal requirements")
 # coordinates
-ind <- !is.na(GENERAL$LOC_COOR_X) | !is.na(GENERAL$X_WGS84)
+ind <- !is.na(GENERAL$X_WGS84)
 pcor <- sum(ind)/Np*100
 print(paste("Geographical coordinates:",round(pcor,digit=2),"%"))
-require("sp")
-wgs84<-CRS("+proj=latlon  +datum=WGS84")
-hydi.wgs <- SpatialPoints(GENERAL[!is.na(GENERAL[,5]),5:6],proj4string=wgs84)
-require(maptools)
-writePointsShape(hydi.wgs, fn="hydi_wgs")
-# require("maps")
-# map("world",xlim=c(-12,38),ylim=c(34,75))
-# points(hydi.wgs,col="red",pch=20)
+
+
 
 print("Other data")
 pG <- pcor
@@ -68,7 +62,7 @@ print("-- PSIZE --")
 N <- nrow(PSIZE)
 print(paste("Total number of entries:",N))
 print(paste("Samples with PSIZE:",round(sum(BASIC$SAMPLE_ID %in% PSIZE$SAMPLE_ID)*100/Ns,digit=2)))
-load("psize_qa.rdata")# idn and sum_pn
+load("../output/psize_qa.rdata")# idn and sum_pn
 print(paste("PSIZE summing to 100%:",round(sum(sum_pn>=99 & sum_pn<=101)*100/length(sum_pn),digit=2),"%"))
 round(sum(sum_pn>=99 & sum_pn<=101)*100/Ns,digit=2)
 pP <- round(sum(sum_pn>=99 & sum_pn<=101)*100/length(sum_pn),digit=2)
@@ -97,7 +91,7 @@ sB <- summary(BASIC[,c(4:5,7:8,18:23)])
 sB.df <- as.data.frame(matrix(as.numeric(substr(sB,9,max(nchar(sB)))),nrow=7,ncol=10))
 names(sB.df) <- gsub(" ","",attr(sB,"dimnames")[[2]])
 rownames(sB.df)<- gsub(" ","",substr(sB[1:7,1],1,7))
-write.csv(t(sB.df),file="basic_summary.csv")
+write.csv(t(sB.df),file="../output/basic_summary.csv")
 
 print("-- CHEMICAL --")
 sC <- summary(CHEMICAL[,c(seq(3,33,by=2),34,35)])
@@ -105,7 +99,7 @@ sC <- summary(CHEMICAL[,c(seq(3,33,by=2),34,35)])
 sC.df <- as.data.frame(matrix(as.numeric(substr(sC,9,max(nchar(sC)))),nrow=7,ncol=18))
 names(sC.df) <- gsub(" ","",attr(sC,"dimnames")[[2]])
 rownames(sC.df)<- gsub(" ","",substr(sC[1:7,1],1,7))
-write.csv(t(sC.df),file="chemical_summary.csv")
+write.csv(t(sC.df),file="../output/chemical_summary.csv")
 
 
 # Meet minimum requirements: add a column to BASIC (logical)
@@ -125,4 +119,5 @@ sid <- BASIC$SAMPLE_ID
 sum(!is.na(BASIC$BD) & !is.na(CHEMICAL$HOC[match(sid,CHEMICAL$SAMPLE_ID)]) & sid %in% RET$SAMPLE_ID & sid%in%idn[sum_pn>=99 & sum_pn<=101])
 
 # Export basic stats
+
 

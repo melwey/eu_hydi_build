@@ -3,7 +3,7 @@
 # Author: M. Weynants
 # Date created: 2013/02/13
 ####################################################################
-load("HYDI_SOURCE_nd_add.Rdata") # HYDI_SOURCE_nd + Cranfield + Morari(add2hydi.R)
+load("../output/HYDI_SOURCE_nd_add.Rdata") # HYDI_SOURCE_nd + Cranfield + Morari(add2hydi.R)
 
 # GENERAL
 # WGS: 2 decimals for 1 km degradation
@@ -63,7 +63,7 @@ print("Anaya")
 #  Code:EPSG::1633; Name:ED50 to WGS 84 (28) 
 #  Code:EPSG::1133; Name:ED50 to WGS 84 (1) 
 # 2023/04/20: replace sp::readShapePoints by sf::st_read
-shp <- st_read("../Anaya/Andalusia_Localization sample points/Andalusia_Localization sample points/Puntos_Andalucia.shp")
+shp <- st_read("../data/Anaya/Andalusia_Localization sample points/Andalusia_Localization sample points/Puntos_Andalucia.shp")
 c<-st_coordinates(shp)
 pid <- shp$PROFILE_ID
 
@@ -246,7 +246,7 @@ f1 <- ggplot2::ggplot() +
   # coord_sf(xlim = c(-11,45), ylim = c(35,72), lims_method = "box") +
   ggtitle("EU-HYDI locations") 
 f1
-ggsave("./fig/hydi.png", width = 14, height = 7, units = "in")
+ggsave("../fig/hydi.png", width = 14, height = 7, units = "in")
 # map("world",xlim=c(-12,50),ylim=c(34,75))
 # points(hydi.wgs,col="red",pch=20)
 # writePointsShape(hydi.wgs,"./gis/hydi_wgs84")
@@ -549,10 +549,10 @@ print(table(psize[grepl("Attila",psize$SOURCE),7]))
 # check p_sum again
 idn <- unique(psize$SAMPLE_ID)
 sum_pn <- sapply(id,function(sid,psize){sum(psize$P_PERCENT[psize$SAMPLE_ID==sid])},psize)
-save("idn","sum_pn",file="psize_qa.rdata")
+save("idn","sum_pn",file="../output/psize_qa.rdata")
 
 # send changes to Attila for approval
-write.csv(psize[grepl("Attila",psize$SOURCE),],file="psize_attila.csv")
+write.csv(psize[grepl("Attila",psize$SOURCE),],file="../output/psize_attila.csv")
 
 
 # when OK replace table
@@ -645,16 +645,16 @@ hydi$COND$VALUE[hydi$COND$SOURCE%in%c("Mako","Housova","Lamorski") & hydi$COND$V
 # for each BASIC$SAMPLE_ID, must have: GENERAL:coordinates; ISO_COUNTRY; RC_L1; RC_L2; CONTACT_P; EMAIL; BASIC: SAMPLE_DEP_TOP; SAMPLE_DEP_BOT; BD; BD_M; COARSE; COARSE_M; CHEMICAL: OC, OC_M; PSIZE: sum=100+/-1, P_M; RET: HEAD, THETA; MEHTOD: CODE_M from other tables
 
 # PSD_EST: HARMONIZED PSD
-PSD_EST <- read.csv("../../QAmeeting/PSIZE/PSIZE_2_50_2000_2013apr26.csv",as.is=TRUE)
+PSD_EST <- read.csv("../data/QAmeeting/PSIZE/PSIZE_2_50_2000_2013apr26.csv",as.is=TRUE)
 # Morari
-morari <- read.csv("../../QAmeeting/PSIZE/PSIZE_2_50_2000_2013jun11.csv",as.is=TRUE)
+morari <- read.csv("../data/QAmeeting/PSIZE/PSIZE_2_50_2000_2013jun11.csv",as.is=TRUE)
 PSD_EST <- rbind(PSD_EST,morari)
 # correction for Norway
 # require(XLConnect)
-# wb <- loadWorkbook("../../QAmeeting/PSIZE/ChangeEstimJune13.xlsx",create=FALSE)
+# wb <- loadWorkbook("../data/QAmeeting/PSIZE/ChangeEstimJune13.xlsx",create=FALSE)
 # newps <- readWorksheet(wb , "data to be updated")
 # 2023/07/02 use csv instead of xlsx
-newps <- read.csv("../../QAmeeting/PSIZE/ChangeEstimJune13_data2update.csv", as.is = TRUE)
+newps <- read.csv("../data/QAmeeting/PSIZE/ChangeEstimJune13_data2update.csv", as.is = TRUE)
 PSD_EST[match(newps$SAMPLE_ID,PSD_EST$SAMPLE_ID),c("USSILT","USSAND")] <- newps[,4:5]
 # put in hydi
 hydi$PSD_EST <- cbind(PROFILE_ID=floor(PSD_EST$SAMPLE_ID/100),PSD_EST[,1:8])
@@ -685,7 +685,7 @@ ggplot() +
             st_as_sf(coords = c("X_WGS84", "Y_WGS84"), crs = 4326), 
           aes(colour = SOURCE), shape = 1)
 
-ggsave("HYDI_SOURCE_nd_qa2.png", width = 14, height = 7, units = "in")
+ggsave("../fig/HYDI_SOURCE_nd_qa2.png", width = 14, height = 7, units = "in")
 
-save('hydi',file="/fig/HYDI_SOURCE_nd_qa2.Rdata")
+save('hydi',file="../output/HYDI_SOURCE_nd_qa2.Rdata")
  

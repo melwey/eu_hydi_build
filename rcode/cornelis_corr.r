@@ -87,5 +87,4 @@ ret1[ret1$SAMPLE_ID==560006101 & ret1$HEAD== 15300,1:2] <- c(5600060,5600061,560
 ret1 <- ret.checks(ret1,basic1$SAMPLE_ID,meth1$CODE_M)
 
 #cond
-cond1 <- cond.checks(cond1,basic1$SAMPLE_ID,meth1$CODE_M)
-
+cond1 <- cond.checks(cond1, basic1$SAMPLE_ID, meth1$CODE_M)

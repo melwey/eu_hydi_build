@@ -31,3 +31,4 @@ ret$HEAD <- as.numeric(gsub(',','',ret$HEAD))
 cond$COND <-as.numeric(gsub(',','',cond$COND))
 # METHOD
 meth$METH_PAR <- toupper(meth$METH_PAR)
+#

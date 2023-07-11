@@ -4,7 +4,7 @@
 # Date: 2013/06/03
 ##############################################################
 
-names(general) <- gsub("SLOPE","SLOP",names(general))
+names(general) <- gsub("SLOPE", "SLOP", names(general))
 # swap WGS
 lat <- general$X_WGS84
 general$X_WGS84 <- general$Y_WGS84
@@ -103,5 +103,5 @@ chemical<-mchem
 psize<-mpsize
 psize$P_PERCENT <- round(psize$P_PERCENT,digit=1)
 psize$P_PERCENT[psize$SAMPLE_ID==3800360202 & psize$P_SIZE==2000]<-46.6 #insyead of 46.8, so that sum p_percent <101.
-ret<-mret[!is.na(mret[,1]),]
-cond<-mcond[!is.na(mcond[,1]),]
+ret <- mret[!is.na(mret[, 1]), ]
+cond <- mcond[!is.na(mcond[, 1]), ]

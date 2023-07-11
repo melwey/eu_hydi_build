@@ -20,4 +20,4 @@ basic1 <- basic.checks(basic1,general$PROFILE_ID,meth1[[1]])
 
 # COND. remove missing values
 cond1 <- cond1[cond1$COND !=-999,]
-cond1 <- cond.checks(cond1,basic1$SAMPLE_ID,meth1[[1]])
+cond1 <- cond.checks(cond1, basic1$SAMPLE_ID, meth1[[1]])

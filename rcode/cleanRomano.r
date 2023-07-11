@@ -33,3 +33,4 @@ ret[is.na(ret)] <- -999
 cond0 <- cond
 cond[is.na(cond0)]<- -999
 names(cond)[6] <-"COND_M"
+# 

@@ -9,4 +9,4 @@ basic1$BD[basic1$BD==0]<- -999
 ret1[ret1$THETA>1,'THETA'] <- ret1[ret1$THETA>1,'THETA']/10
 # COND: remove missing values
 cond1 <- cond1[cond$COND!=-999,]
-
+#

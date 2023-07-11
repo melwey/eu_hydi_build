@@ -7,7 +7,7 @@
 ######################################################################
 # require(XLConnect)
 # load quality assessed HYDI
-load("HYDI_SOURCE_nd_qa2.Rdata")
+load("../output/HYDI_SOURCE_nd_qa2.Rdata")
 meth <- hydi$METHOD
 anaya.meth.ref <- "USDA, 1984. Procedures for Collecting Soil Samples and Methods of Analysis for Soil Survey; Rayment and Higginson, 1992. Australian Laboratory Handbook of Soil and Water Chemical Methods; Klute, 1986. Methods of Soil Analysis: Part 1, Physical and Mineralogical Methods. SSSA; Weaver et al.,1994. Methods of Soil Analysis: Part 2, Chemical and Microbiological Properties. SSSA."
 
@@ -20,12 +20,12 @@ anaya.meth.ref <- "USDA, 1984. Procedures for Collecting Soil Samples and Method
 # theta <- readWorksheet(wb,"THETA_M")
 # cond <- readWorksheet(wb,"COND_M")
 # inv <-  readWorksheet(wb,"INV_M")
-basic <- read.csv("../../QAmeeting/METHOD/QA_all_NEW/BASIC_M.csv")
-chem <- read.csv("../../QAmeeting/METHOD/QA_all_NEW/CHEMICAL_M.csv")
-psize <-  read.csv("../../QAmeeting/METHOD/QA_all_NEW/P_M.csv")
-theta <- read.csv("../../QAmeeting/METHOD/QA_all_NEW/THETA_M.csv")
-cond <- read.csv("../../QAmeeting/METHOD/QA_all_NEW/COND_M.csv")
-inv <- read.csv("../../QAmeeting/METHOD/QA_all_NEW/INV_M.csv")
+basic <- read.csv("../data/QAmeeting/METHOD/QA_all_NEW/BASIC_M.csv")
+chem <- read.csv("../data/QAmeeting/METHOD/QA_all_NEW/CHEMICAL_M.csv")
+psize <-  read.csv("../data/QAmeeting/METHOD/QA_all_NEW/P_M.csv")
+theta <- read.csv("../data/QAmeeting/METHOD/QA_all_NEW/THETA_M.csv")
+cond <- read.csv("../data/QAmeeting/METHOD/QA_all_NEW/COND_M.csv")
+inv <- read.csv("../.data/QAmeeting/METHOD/QA_all_NEW/INV_M.csv")
 
 # new metod table
 basic.meth.new <- basic[!duplicated(basic$NEW_CODE_M),c("NEW_CODE_M","NEW_METHOD","NEW_METH_REF","METH_PAR")]
@@ -94,7 +94,7 @@ CHEM$TC[ind.tc] <- oOC$OC[ind.tc]
 CHEM$TC_M[ind.tc] <- sapply(o.meth.source[ind.tc],function(x){y <- chem$NEW_CODE_M[meth.source==x]})
 
 # kvaerno's updated carbon
-kvaerno <- read.csv("../Kvaerno/CARBON_update_130612.csv")
+kvaerno <- read.csv("../data/Kvaerno/CARBON_update_130612.csv")
 kvaerno$TC <- as.numeric(as.character(kvaerno$TC)); kvaerno$TC[is.na(kvaerno$TC)]<-0.05
 kvaerno$LOI_M[kvaerno$LOI_M==133]<-130
 kvaerno$TC_M[kvaerno$TC_M==140]<-150
@@ -216,7 +216,7 @@ CHEM[ind,"PH_CACL2"] <- CHEM[ind,"PH_KCL"]
 CHEM[ind,"PH_CACL2_M"] <- CHEM[ind,"PH_KCL_M"]
 CHEM[ind,c("PH_KCL","PH_KCL_M")] <- -999
 # update Kvaerno's PH_CACL2
-kvaerno <- read.csv("../Kvaerno/CHEMICAL.csv")
+kvaerno <- read.csv("../data/Kvaerno/CHEMICAL.csv")
 ind.kv <- match(kvaerno$SAMPLE_ID,CHEM$SAMPLE_ID)
 CHEM[ind.kv,c("PH_CACL2","PH_CACL2_M")] <- kvaerno[,c("PH_CACL2","PH_CACL2_M")]
 
@@ -305,4 +305,4 @@ hydi$METHOD <- replace(hydi$METHOD,is.na(hydi$METHOD),"ND")
 hydi$METHOD <- hydi$METHOD[order(hydi$METHOD$CODE_M),]
 
 # save
-save(hydi,file="HYDI_SOURCE_nd_qa3.Rdata")
+save(hydi,file="../output/HYDI_SOURCE_nd_qa3.Rdata")

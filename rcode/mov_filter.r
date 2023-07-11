@@ -32,7 +32,6 @@ return(output)
 # points(THETA~log10(HEAD),data=D2,col="green",pch=4)
 # points(THETA~log10(HEAD),data=D3,col="red",pch=3)
 
-
 # to be changed: needs to work only in the range where diff(h) is small
 h.filter <- function(data){
 output<-as.data.frame(matrix(NA,nrow=1,ncol=2))

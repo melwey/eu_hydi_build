@@ -36,4 +36,4 @@ chemical[is.na(chemical)] <- -999
 chemical[,names(chemical) %in% c('EX_NA_M','ACIDITY_NA4O_M','ACIDITY_KCL_M')] <- -999
 # remove BASE_CATIONS_M
 chemical <- chemical[,!grepl("BASE_CATIONS_M",names(chemical))]
-
+#

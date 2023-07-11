@@ -57,4 +57,4 @@ names(ret)[2] <- "SAMPLE_ID"
 
 # cond
 cond[is.na(cond)] <- -999
-names(cond)[1:2] <- c("PROFILE_ID","SAMPLE_ID")
+names(cond)[1:2] <- c("PROFILE_ID", "SAMPLE_ID")

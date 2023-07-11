@@ -40,4 +40,3 @@ cond[[15]] <- -999
 
 # METHOD, TSERMETA and TSERDATA: nothing to change
 print('... done')
-

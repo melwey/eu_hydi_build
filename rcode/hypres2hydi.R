@@ -13,7 +13,7 @@ require(RODBC);require(ISOcodes)
 # load original hypres
 # connect to database
 ch <- odbcDriverConnect(paste("DRIVER={Microsoft Access Driver (*.mdb, *.accdb)}",
-				"DBQ=../../../MyWater/HYPRES_full/hypres access ver3.mdb",sep=";"))
+				"DBQ=../data/hypres access ver3.mdb",sep=";"))
 T <- sqlTables(ch); print(T[T$TABLE_TYPE=="TABLE",3])
 # querry data
 df.basic <- sqlQuery(ch,"SELECT * FROM BASICDATA",stringsAsFactors=FALSE)
@@ -315,8 +315,8 @@ df.BAS$POR_M[df.BAS$PROFILE_ID %in% df.GEN$PROFILE_ID[grepl('BGR',df.GEN$CONTACT
 # OC_M
 bgr_oc <- data.frame(CODE_M=132,METHOD="dichromate oxidation with K2Cr2O7 in sulfuric acid",METH_REF="ND",METH_PAR="OC_M")
 df.CHEM$OC_M[df.CHEM$PROFILE_ID %in% df.GEN$PROFILE_ID[grepl('BGR',df.GEN$CONTACT_A)]] <- 132
-# P_M : pretreatment by hydrogen peroxide (H2O2) to destroy organic matter and by hydrochloric acid (HCl) to remove alkaline carbonates. After dispersion by sodium pyrophosphate (Na4P2O7) the contents of silt (2 – 63 µm) and clay (< 2 µm) fractions were measured by pipette sampling and contents of four sand fractions (63 – 125 µm, 125 – 200 µm, 200 – 630 µm, 630 – 2000 µm) were determined by wet sieving 
-bgr_psd <- data.frame(CODE_M=500,METHOD='pretreatment by H2O2 and HCl, dispersion by a4P2O7, pipette method for silt (2 – 63 µm) and clay (< 2 µm) fractions and wet sieving for four sand fractions (63 – 125 µm, 125 – 200 µm, 200 – 630 µm, 630 – 2000 µm)',METH_REF='ND',METH_PAR='COND_M',stringsAsFactors=FALSE)
+# P_M : pretreatment by hydrogen peroxide (H2O2) to destroy organic matter and by hydrochloric acid (HCl) to remove alkaline carbonates. After dispersion by sodium pyrophosphate (Na4P2O7) the contents of silt (2 ï¿½ 63 ï¿½m) and clay (< 2 ï¿½m) fractions were measured by pipette sampling and contents of four sand fractions (63 ï¿½ 125 ï¿½m, 125 ï¿½ 200 ï¿½m, 200 ï¿½ 630 ï¿½m, 630 ï¿½ 2000 ï¿½m) were determined by wet sieving 
+bgr_psd <- data.frame(CODE_M=500,METHOD='pretreatment by H2O2 and HCl, dispersion by a4P2O7, pipette method for silt (2 ï¿½ 63 ï¿½m) and clay (< 2 ï¿½m) fractions and wet sieving for four sand fractions (63 ï¿½ 125 ï¿½m, 125 ï¿½ 200 ï¿½m, 200 ï¿½ 630 ï¿½m, 630 ï¿½ 2000 ï¿½m)',METH_REF='ND',METH_PAR='COND_M',stringsAsFactors=FALSE)
 df.PS$P_M[df.PS$PROFILE_ID %in% df.GEN$PROFILE_ID[grepl('BGR',df.GEN$CONTACT_A)]] <- 500
 
 # Netherlands: different sources and methods
@@ -344,7 +344,7 @@ df.COND$COND_M[df.COND$PROFILE_ID %in% df.GEN$PROFILE_ID[grepl('multistep',df.GE
 
 # SK
 sk <- data.frame(CODE_M=c(110,134,604,605,807),
-METHOD=c('Core method (ISO 11272) with 100 mL steel cylinders, oven-dried at 105°C for 48 hours','Dry combustion at 900°C','lab water retention by pressure plate and air drying','field water retention using TDR and tensiometers','field hydraulic conductivity by Guelph permeameter'),
+METHOD=c('Core method (ISO 11272) with 100 mL steel cylinders, oven-dried at 105ï¿½C for 48 hours','Dry combustion at 900ï¿½C','lab water retention by pressure plate and air drying','field water retention using TDR and tensiometers','field hydraulic conductivity by Guelph permeameter'),
 METH_REF=c('ISO 11272','ISO 10694','ND','ND','ND'),
 METH_PAR=c('BD_M','OC_M','THETA_M','THETA_M','COND_M'),stringsAsFactors=FALSE)
 df.BAS$POR_M[df.BAS$PROFILE_ID %in% df.GEN$PROFILE_ID[df.GEN$ISO_COUNTRY=='SK' & grepl('pressure plate',df.GEN$COMMENTS2)]] <- 100
@@ -359,7 +359,7 @@ sch <- data.frame(CODE_M=c(131,606,808),METHOD=c(
 "Woesthoff method",
 "evaporation method on 250cm3 undisturbed soil cores with tensions measured at two points through time",
 "evaporation method on 250cm3 undisturbed soil cores with tensions at two points. unsaturated conductivity calculated using Darcy's law and assuming quasi steady state"),
-METH_REF=c("ND","Schindler, U. 1980. Ein Schnellverfahren zur Messung der Wasserleitfähigkeit im teilgesättigten Boden an Stechzylinderproben.","Schindler, U. 1980. Ein Schnellverfahren zur Messung der Wasserleitfähigkeit im teilgesättigten Boden an Stechzylinderproben."),
+METH_REF=c("ND","Schindler, U. 1980. Ein Schnellverfahren zur Messung der Wasserleitfï¿½higkeit im teilgesï¿½ttigten Boden an Stechzylinderproben.","Schindler, U. 1980. Ein Schnellverfahren zur Messung der Wasserleitfï¿½higkeit im teilgesï¿½ttigten Boden an Stechzylinderproben."),
 METH_PAR=c("OC_M","THETA_M","COND_M"),stringsAsFactors=FALSE)
 df.CHEM$OC_M[df.CHEM$PROFILE_ID %in% df.GEN$PROFILE_ID[grepl("Schindler",df.GEN$CONTACT_P)]] <- 131
 df.RET$THETA_M[df.RET$PROFILE_ID %in% df.GEN$PROFILE_ID[grepl("Schindler",df.GEN$CONTACT_P)]] <- 606
@@ -403,7 +403,7 @@ df.METH <- as.data.frame(df.METH,stringsAsFactors=FALSE)
 #hypres_hydi<-list(general=df.GEN,basic=df.BAS.nd,chemical=df.CHEM.nd,psize=df.PS,ret=df.RET,cond=df.COND,meth=df.METH,tsermeta=NULL,tserdata=NULL)
 hypres_hydi<-list(general=df.GEN,basic=df.BAS[nona,],chemical=df.CHEM,psize=df.PS,ret=df.RET,cond=df.COND,meth=df.METH,tsermeta=NULL,tserdata=NULL)
 
-save(hypres_hydi,file='hypres_hydi.RData')
+save(hypres_hydi,file='../output/hypres_hydi.RData')
 
 
 dup <- duplicated(hypres_hydi$basic[,c("PROFILE_ID","HOR1_NAME","BD")])

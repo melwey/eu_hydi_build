@@ -172,4 +172,5 @@ cond$SAMPLE_ID <- basic_o$SAMPLE_ID[match(sid.k,sid)]
 cond[is.na(cond)] <- -999
 cond$ID <- sid.k
 
-meth <- rbind(meth,ocm,bdm,psm)
+meth <- rbind(meth, ocm, bdm, psm)
+#

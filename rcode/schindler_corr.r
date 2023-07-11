@@ -54,5 +54,3 @@ ret1 <- ret.checks(ret1,basic1[[2]],meth1[[1]])
 
 # cond
 # COND: some negative data (missing values)
-
-

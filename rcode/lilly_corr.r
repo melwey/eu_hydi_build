@@ -81,3 +81,4 @@ psize1 <- psize.checks(psize1,basic1$SAMPLE_ID,meth1$CODE_M)
 # remove samples that are not in basic
 cond1 <- cond1[cond1$PROFILE_ID %in% chemical1$PROFILE_ID,]
 cond1 <- cond.checks(cond1,basic1$SAMPLE_ID,meth1$CODE_M)
+#

@@ -31,3 +31,4 @@ chemical1[chemical1$SAMPLE_ID==6200001701,c("EX_MG","BASE_CATIONS")]<-c(0.01,0.2
 chemical1[chemical1$SAMPLE_ID==6200025402,c("EX_K","BASE_CATIONS")]<-c(0.05,16.80)
 # BASE_CATIONS should be removed from samples that do not have all major cations:
 chemical1$BASE_CATIONS[chemical1$EX_CA==-999 | chemical1$EX_MG==-999 | chemical1$EX_K==-999 | chemical1$EX_NA==-999] <- -999
+#

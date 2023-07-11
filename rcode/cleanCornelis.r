@@ -13,5 +13,4 @@ chemical[grepl('ND',chemical)]<--999
 cond$COND_M <- as.numeric(cond$COND_M)
 #cond[is.na(cond$COND_M),'COND_M'] <- -999
 cond <- cond[cond$COND != -999,]
-
-
+#

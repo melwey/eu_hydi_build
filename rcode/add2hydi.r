@@ -25,34 +25,34 @@ CHEMICAL[,c(1,2,4,6,8,10,12,14,16,18,20,22,24,27,29)] <- as.integer(CHEMICAL[,c(
 CHEMICAL[,c(3,5,7,9,11,13,15,17,19,21,23,25,26,28)] <- as.numeric(CHEMICAL[,c(3,5,7,9,11,13,15,17,19,21,23,25,26,28)])
 
 
-load("HYDI_SOURCE_nd.Rdata")
+load("../output/HYDI_SOURCE_nd.Rdata")
 
 dirs <- c("Cranfield","Morari")
 # Add Cranfield data
 for (i in 1:2){
 # GENERAL
-general <- read.csv(paste('../',dirs[i],'/GENERAL.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip = TRUE)
+general <- read.csv(paste('../data/',dirs[i],'/GENERAL.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip = TRUE)
 # remove empty lines
 general<- general[!is.na(general[[1]]),]
 # METHOD
-meth <- read.csv(paste('../',dirs[i],'/METHOD.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
+meth <- read.csv(paste('../data/',dirs[i],'/METHOD.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 meth <- meth[!is.na(meth[[1]]),]
 meth$METH_PAR <- toupper(meth$METH_PAR)
 # BASIC
-basic <- read.csv(paste('../',dirs[i],'/BASIC.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
+basic <- read.csv(paste('../data/',dirs[i],'/BASIC.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 basic <- basic[!is.na(basic[[1]]),]
 # CHEMICAL
-chemical <- read.csv(paste('../',dirs[i],'/CHEMICAL.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
+chemical <- read.csv(paste('../data/',dirs[i],'/CHEMICAL.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 chemical <- chemical[!is.na(chemical[[1]]),]
 names(chemical) <- toupper(names(chemical))
 # PSIZE
-psize <- read.csv(paste('../',dirs[i],'/PSIZE.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
+psize <- read.csv(paste('../data/',dirs[i],'/PSIZE.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 psize <- psize[!is.na(psize[[1]]),]
 # RET
-ret <- read.csv(paste('../',dirs[i],'/RET.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
+ret <- read.csv(paste('../data/',dirs[i],'/RET.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 ret <- ret[!is.na(ret[[1]]),]
 # COND
-cond <- read.csv(paste('../',dirs[i],'/COND.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
+cond <- read.csv(paste('../data/',dirs[i],'/COND.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 cond <- cond[!is.na(cond[[1]]),]
 
 # remove all unused codes from meth
@@ -87,6 +87,6 @@ hydi$RET <- rbind(hydi$RET,ret1)
 hydi$METHOD <- rbind(hydi$METHOD,meth1)
 
 # save
-save("hydi",file="HYDI_SOURCE_nd_add.Rdata")
+save("hydi",file="../output/HYDI_SOURCE_nd_add.Rdata")
 
 }

@@ -40,7 +40,7 @@ ret1$THETA[ret1$SAMPLE_ID == 406910801 & ret1$HEAD== 3000] <- 0.0339
 ret1$THETA[ret1$SAMPLE_ID == 406040301 & ret1$HEAD== 100] <- 0.482
 
 
-ret1 <- ret.checks(ret1,basic1[[2]],meth1[[1]])
-cond1 <- cond.checks(cond,basic1[[2]],meth1[[1]])
+ret1 <- ret.checks(ret1,basic1[[2]], meth1[[1]])
+cond1 <- cond.checks(cond,basic1[[2]], meth1[[1]])
 
 # the rest is OK!

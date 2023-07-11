@@ -6,7 +6,7 @@
 ######################################################################
 # GENERAL
 # solved by contributor
-general1<-general.checks(general1)
+general1 <- general.checks(general1)
 
 # BASIC
 # SAMPLE_POS
@@ -38,11 +38,11 @@ psize1 <- psize.checks(psize1,basic1$SAMPLE_ID,meth$CODE_M)
 
 # RET
 # SAMPLE_ID not in BASIC
-ret1$SAMPLE_ID[ret1$SAMPLE_ID==3800016202]<-3800016201
+ret1$SAMPLE_ID[ret1$SAMPLE_ID==3800016202] <- 3800016201
 # -999
 ret1 <- ret1[ret1$HEAD!=-999,]
 ret1 <- ret.checks(ret1,basic1$SAMPLE_ID,meth$CODE_M)
 
 # COND
-cond1<-cond1[cond1$COND!=-999,]
-cond1 <- cond.checks(cond1,basic1$SAMPLE_ID,meth$CODE_M)
+cond1 <- cond1[cond1$COND!=-999,]
+cond1 <- cond.checks(cond1, basic1$SAMPLE_ID, meth$CODE_M)

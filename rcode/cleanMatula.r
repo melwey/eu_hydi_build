@@ -4,7 +4,7 @@
 # Date created: 2013/01/17
 ################################################################
 # general
-general0<-general
+general0 <- general
 general[,5]<-as.numeric(general[,5])
 general[,6]<-as.numeric(general[,6])
 general[is.na(general[,5]),5:6]<- -999

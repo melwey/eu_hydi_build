@@ -38,5 +38,4 @@ chemical0 <- chemical
 #chemical[chemical$SAMPLE_ID %in% chemical$SAMPLE_ID[duplicated(chemical$SAMPLE_ID)],1:5]
 #chemical[as.numeric(substr(as.character(chemical$SAMPLE_ID),1,8)) != chemical$PROFILE_ID,1:8]
 chemical <- chemical[,!grepl("BASE_CATIONS_M",names(chemical))]
-
-
+#

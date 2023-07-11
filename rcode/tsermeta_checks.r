@@ -20,5 +20,5 @@ if (any(! T_SER_ID %in% y)) stop("REL_PROFILE must refer to an existing profile 
 # OUTPUT
 detach(x)
 print('... done')
-x
+return(x)
 }

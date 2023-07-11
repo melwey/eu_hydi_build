@@ -4,9 +4,9 @@
 # Date created: 2012/11/09
 # Last update: 2012/11/22
 ######################################################################
-# setwd('E:/weyname/Documents/Documents/EU_HYDI/ContributedData/Rcode')
+
 # load packages
-# require(RODBC)
+
 # load functions
 source('general_checks.r')
 source('basic_checks.r')
@@ -63,10 +63,10 @@ if (exists('general1')) rm(general1,basic1,chemical1,psize1,ret1,cond1,meth1,tse
 # read csv files
 # GENERAL
 # ---- 2023/04/05 fix: files were imported without specifying encoding and special characters were scrambled
-if (file.exists(paste('../',dirs[i],'/general_utf8.csv',sep=''))) {
-  general <- read.csv(paste('../',dirs[i],'/general_utf8.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip = TRUE)
+if (file.exists(paste('../data/',dirs[i],'/general_utf8.csv',sep=''))) {
+  general <- read.csv(paste('../data/',dirs[i],'/general_utf8.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip = TRUE)
 } else {
-  general <- read.csv(paste('../',dirs[i],'/GENERAL.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip = TRUE)
+  general <- read.csv(paste('../data/',dirs[i],'/GENERAL.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip = TRUE)
 }
 # ------
 # remove empty lines
@@ -74,25 +74,25 @@ general<- general[!is.na(general[[1]]),]
 # METHOD
 # 2023/04/18 exported in utf8 because impossible to import Straus as is invalid multibyte string at '<d6>NOR<4d> L 1068'
 if (grepl("Strauss",dirs[i])) {
-  path <- paste('../',dirs[i],'/METHOD_utf8.csv',sep='')
-} else {path <- paste('../',dirs[i],'/METHOD.csv',sep='')}
+  path <- paste('../data/',dirs[i],'/METHOD_utf8.csv',sep='')
+} else {path <- paste('../data/',dirs[i],'/METHOD.csv',sep='')}
 meth <- read.csv(path,header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 meth <- meth[!is.na(meth[[1]]),]
 # BASIC
-basic <- read.csv(paste('../',dirs[i],'/BASIC.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
+basic <- read.csv(paste('../data/',dirs[i],'/BASIC.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 basic <- basic[!is.na(basic[[1]]),]
 # CHEMICAL
-chemical <- read.csv(paste('../',dirs[i],'/CHEMICAL.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
+chemical <- read.csv(paste('../data/',dirs[i],'/CHEMICAL.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 chemical <- chemical[!is.na(chemical[[1]]),]
 names(chemical) <- toupper(names(chemical))
 # PSIZE
-psize <- read.csv(paste('../',dirs[i],'/PSIZE.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
+psize <- read.csv(paste('../data/',dirs[i],'/PSIZE.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 psize <- psize[!is.na(psize[[1]]),]
 # RET
-ret <- read.csv(paste('../',dirs[i],'/RET.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
+ret <- read.csv(paste('../data/',dirs[i],'/RET.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 ret <- ret[!is.na(ret[[1]]),]
 # COND
-cond <- read.csv(paste('../',dirs[i],'/COND.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
+cond <- read.csv(paste('../data/',dirs[i],'/COND.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 cond <- cond[!is.na(cond[[1]]),]
 
 # clean specific contributions to match guidelines
@@ -126,11 +126,11 @@ cond1 <- cond.checks(cond,basic1[[2]],meth1[[1]])
 
 if (!(all(general1$REL_T_SER == -999) | all(general1$REL_T_SER == 'ND'))){
 # TSERMETA
-tsermeta <- read.csv(paste('../',dirs[i],'/TSERMETA.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
+tsermeta <- read.csv(paste('../data/',dirs[i],'/TSERMETA.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 tsermeta <- tsermeta[!is.na(tsermeta[[1]]),]
 tsermeta1 <- tsermeta.checks(tsermeta)
 # TSERDATA
-tserdata <- read.csv(paste('../',dirs[i],'/TSERDATA.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
+tserdata <- read.csv(paste('../data/',dirs[i],'/TSERDATA.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 tserdata <- tserdata[!is.na(tserdata[[1]]),]
 tserdata1 <- tserdata.checks(meth)
 } else {tsermeta1<-NULL;tserdata1<-NULL}
@@ -173,17 +173,17 @@ names(DB[[i]]) <- c('general','basic','chemical','psize','ret','cond','meth','ts
 
 # add greek
 # load("E:/weyname/Documents/Documents/MyWATER/Nestos-GR/Rcode/GRhydi.Rdata")
-load("../Bilas/Nestos-GR/Rcode/GRhydi.Rdata")
+load("../data/Bilas/Nestos-GR/Rcode/GRhydi.Rdata")
 DB[[19]] <- GRhydi
 names(DB)[19] <- "Bilas"
 
 
-save('DB', file='HYDI_single.Rdata')
+save('DB', file='../output/HYDI_single.Rdata')
 
 
 # import hypres data
 #source('hypres_hydi.R')
-load('hypres_hydi.RData') #hypres_hydi
+load('../output/hypres_hydi.RData') #hypres_hydi
 # checks
 gen <- general.checks(hypres_hydi$general)
 # Some EMAIL are missing
@@ -221,12 +221,12 @@ names(DB)[i] <- names(hypres.contr)[i-19]
 # add meth
 DB$HYPRES[[7]] <- hypres_hydi$meth
 
-save('DB', file='HYDI_single_hyp.Rdata')
+save('DB', file='../output/HYDI_single_hyp.Rdata')
 
 # Next step: Harmonize methods codes!!! and check identifiers for countries where more than one dataset (Germany, Italy, Belgium)
 
 # BUNDLE with SOURCE
-load("HYDI_single_hyp.Rdata")
+load("../output/HYDI_single_hyp.Rdata")
 tnames <- c("GENERAL","BASIC","CHEMICAL","PSIZE","RET","COND","METHOD")
 hydi <- list()
 for (j in 1:length(DB)){
@@ -252,9 +252,9 @@ tbl <- cbind(DB[[j]][[k]],SOURCE=names(DB)[j],stringsAsFactors=FALSE)
 if (j==1){hydi[[k]] <- tbl} else {hydi[[k]] <- rbind(hydi[[k]],tbl)}
 }}}
 names(hydi) <- tnames
-save('hydi',file="HYDI_SOURCE.Rdata")
+save('hydi',file="../output/HYDI_SOURCE.Rdata")
 
-load("HYDI_SOURCE.Rdata")
+load("../output/HYDI_SOURCE.Rdata")
 # harmonize ID's
 unique(hydi$GENERAL$SOURCE[hydi$GENERAL$PROFILE_ID %in% hydi$GENERAL$PROFILE_ID[duplicated(hydi$GENERAL$PROFILE_ID)]])
 # BE
@@ -332,7 +332,7 @@ hydi$COND <- hydi$COND[hydi$COND$COND != -999,]
 # METH_PAR in uppercase
 hydi$METHOD$METH_PAR <- toupper(hydi$METHOD$METH_PAR)
 
-save('hydi',file="HYDI_SOURCE_nd.Rdata")
+save('hydi',file="../output/HYDI_SOURCE_nd.Rdata")
 
 # run checks on hydi
 general_hydi <- general.checks(hydi$GENERAL) # remaining problems: LC and LU,, WRB2006_PQ1 and SQ1
@@ -351,49 +351,51 @@ ret_hydi <- ret.checks(hydi$RET,hydi$BASIC$SAMPLE_ID,hydi$METHOD$CODE_M)# HEAD, 
 
 cond_hydi <- cond.checks(hydi$COND,hydi$BASIC$SAMPLE_ID,hydi$METHOD$CODE_M)# COND<0; missing COND_M in method
 
-save('hydi',file="HYDI_SOURCE_nd.Rdata")
+save('hydi',file="../output/HYDI_SOURCE_nd.Rdata")
 
-# example *.mdb
-# CAUTION: need to make de varchar(n) more efficient
-# integer for id's
-g=c("int","varchar(30)","varchar(30)","varchar(50)","float","float","int","varchar(2)","varchar(25)","varchar(25)","varchar(3)","varchar(3)","varchar(3)","varchar(4)","varchar(4)","varchar(2)","varchar(2)","varchar(2)","varchar(2)","varchar(2)","int","varchar(2)","varchar(2)","varchar(2)","int","varchar(2)","varchar(2)","varchar(2)","varchar(2)","varchar(2)","varchar(2)","varchar(2)","int","varchar(2)","int","varchar(3)","varchar(2)","varchar(2)","varchar(2)","varchar(2)","varchar(2)","varchar(2)","varchar(2)","varchar(2)","varchar(3)","varchar(3)","varchar(3)","varchar(3)","varchar(3)","varchar(3)","varchar(120)","varchar(255)","int","int","int","varchar(150)","varchar(255)","varchar(50)","varchar(255)","varchar(50)","varchar(100)","varchar(20)","varchar(255)","varchar(255)","varchar(255)","varchar(20)")
-attr(g,"names") <- names(hydi[[1]])
-b <- c("int","float","int","float","float","varchar(7)","float","float","varchar(7)","float","float","varchar(7)","float","float","varchar(6)","varchar(2)","varchar(6)","float","int","float","int","float","int","varchar(20)")
-attr(b,"names") <- names(hydi[[2]])
-c <- c("int","float","float","int","float","int","float","int","float","int","float","int","float","int","float","int","float","int","float","int","float","int","float","int","float","float","int","float","int","varchar(20)")
-attr(c,"names") <- names(hydi[[3]])
-p <- c("int","float","float","float","int","varchar(30)","varchar(20)")
-attr(p,"names") <- names(hydi[[4]])
-r <- c("int","float","float","float","int","float","float","float","float","float","float","float","float","int","varchar(30)","varchar(20)")
-attr(r,"names") <- names(hydi[[5]])
-k <- c("int","float","varchar(5)","float","float","int","float","float","float","float","float","float","float","float","float","int","varchar(30)","varchar(20)")
-attr(k,"names") <- names(hydi[[6]])
-m <- c("int","varchar(255)","varchar(255)","varchar(20)","varchar(20)")
-attr(m,"names") <- names(hydi[[7]])
-vT=list(general=g,basic=b,chemical=c,psize=p,ret=r,cond=k,meth=m)
-# open connection with database
-require("RODBC")
-ch <- odbcConnectAccess2007('../HYDI-v1_BETA.accdb')
-# for (j in 1:8){
+# # export to mdb
+# # example *.mdb
+# # CAUTION: need to make de varchar(n) more efficient
+# # integer for id's
+# g=c("int","varchar(30)","varchar(30)","varchar(50)","float","float","int","varchar(2)","varchar(25)","varchar(25)","varchar(3)","varchar(3)","varchar(3)","varchar(4)","varchar(4)","varchar(2)","varchar(2)","varchar(2)","varchar(2)","varchar(2)","int","varchar(2)","varchar(2)","varchar(2)","int","varchar(2)","varchar(2)","varchar(2)","varchar(2)","varchar(2)","varchar(2)","varchar(2)","int","varchar(2)","int","varchar(3)","varchar(2)","varchar(2)","varchar(2)","varchar(2)","varchar(2)","varchar(2)","varchar(2)","varchar(2)","varchar(3)","varchar(3)","varchar(3)","varchar(3)","varchar(3)","varchar(3)","varchar(120)","varchar(255)","int","int","int","varchar(150)","varchar(255)","varchar(50)","varchar(255)","varchar(50)","varchar(100)","varchar(20)","varchar(255)","varchar(255)","varchar(255)","varchar(20)")
+# attr(g,"names") <- names(hydi[[1]])
+# b <- c("int","float","int","float","float","varchar(7)","float","float","varchar(7)","float","float","varchar(7)","float","float","varchar(6)","varchar(2)","varchar(6)","float","int","float","int","float","int","varchar(20)")
+# attr(b,"names") <- names(hydi[[2]])
+# c <- c("int","float","float","int","float","int","float","int","float","int","float","int","float","int","float","int","float","int","float","int","float","int","float","int","float","float","int","float","int","varchar(20)")
+# attr(c,"names") <- names(hydi[[3]])
+# p <- c("int","float","float","float","int","varchar(30)","varchar(20)")
+# attr(p,"names") <- names(hydi[[4]])
+# r <- c("int","float","float","float","int","float","float","float","float","float","float","float","float","int","varchar(30)","varchar(20)")
+# attr(r,"names") <- names(hydi[[5]])
+# k <- c("int","float","varchar(5)","float","float","int","float","float","float","float","float","float","float","float","float","int","varchar(30)","varchar(20)")
+# attr(k,"names") <- names(hydi[[6]])
+# m <- c("int","varchar(255)","varchar(255)","varchar(20)","varchar(20)")
+# attr(m,"names") <- names(hydi[[7]])
+# vT=list(general=g,basic=b,chemical=c,psize=p,ret=r,cond=k,meth=m)
+
+# # open connection with database
+# require("RODBC")
+# ch <- odbcConnectAccess2007('../output/HYDI-v1_BETA.accdb')
+# # for (j in 1:8){
+# # print("---------")
+# # print(names(DB)[j])
+# # #tnames <- toupper(paste(names(DB[[j]]),names(DB)[j],sep='_'))
+# for (k in 1:7){
 # print("---------")
-# print(names(DB)[j])
-# #tnames <- toupper(paste(names(DB[[j]]),names(DB)[j],sep='_'))
-for (k in 1:7){
-print("---------")
-print(tnames[k])
-# if (nrow(DB[[j]][[k]])>0){
-# tbl <- cbind(DB[[j]][[k]],SOURCE=names(DB)[j],stringsAsFactors=FALSE)
-# if (j==1){
-sqlDrop(ch, tnames[k], errors = FALSE)
-sqlSave(ch, hydi[[k]], tablename = tnames[k], append = FALSE,
-        rownames = FALSE, colnames = FALSE, verbose = FALSE,
-        safer = TRUE, addPK = FALSE,varTypes=vT[[k]])
-# } else {
-# tryCatch(sqlSave(ch, tbl, tablename = tnames[k], append = TRUE,
-        # rownames = FALSE, colnames = FALSE, verbose = FALSE,
-        # safer = TRUE, addPK = FALSE,varTypes=vT[[k]]),
-		# error=function(e){print(paste("Error when writing",tnames[k],"from",names(DB)[j],"to Access database"))})}
-}
-#}}
-odbcClose(ch)
-# #
+# print(tnames[k])
+# # if (nrow(DB[[j]][[k]])>0){
+# # tbl <- cbind(DB[[j]][[k]],SOURCE=names(DB)[j],stringsAsFactors=FALSE)
+# # if (j==1){
+# sqlDrop(ch, tnames[k], errors = FALSE)
+# sqlSave(ch, hydi[[k]], tablename = tnames[k], append = FALSE,
+#         rownames = FALSE, colnames = FALSE, verbose = FALSE,
+#         safer = TRUE, addPK = FALSE,varTypes=vT[[k]])
+# # } else {
+# # tryCatch(sqlSave(ch, tbl, tablename = tnames[k], append = TRUE,
+#         # rownames = FALSE, colnames = FALSE, verbose = FALSE,
+#         # safer = TRUE, addPK = FALSE,varTypes=vT[[k]]),
+# 		# error=function(e){print(paste("Error when writing",tnames[k],"from",names(DB)[j],"to Access database"))})}
+# }
+# #}}
+# odbcClose(ch)
+# # #

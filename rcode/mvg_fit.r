@@ -1,48 +1,44 @@
 # MVG fit
-# fitting Mualem and van Genuchten models to EU-HYDI data
+# fitting Mualem and van Genuchten models to EU-HYDI data, with optimx
 # 
 # Author: M. Weynsnts
 # Date created: 2013/05/03
 ##################################################################
 
-load("HYDI_SOURCE_nd_qa3.Rdata")
-
-# load("VG_hydi.rdata")
-# RETfilt.original <- RETfilt
-# VG.hydi.original <- VG.hydi
+load("../output/HYDI_SOURCE_nd_qa3.Rdata")
 
 # set some useful functions
 pF2h <- function(pF){h <- 10^(pF)}
 h2pF <- function(h){pF <- log10(h)}
-source("../../../Rwork/MyFunctions/MV.R")
-source("../../../Rwork/MyFunctions/fitTheta.R")
+source("MV.R")
+source("fitTheta.R")
 source("mov_filter.r")
 
 sid.ret <- unique(hydi$RET$SAMPLE_ID)
-ind.ret <- matrix(FALSE,nrow=length(sid.ret),ncol=4)
-nret <- rep(0,length(sid.ret))
+ind.ret <- matrix(FALSE, nrow = length(sid.ret), ncol = 4)
+nret <- rep(0, length(sid.ret))
 
 # first apply filter
-RETfilt<-data.frame(SAMPLE_ID=NULL,HEAD=NULL,THETA=NULL,THETA_FIT=NULL)
-for (i in 1:length(sid.ret)){
-ind <- hydi$RET$SAMPLE_ID == sid.ret[i] & hydi$RET$FLAG
-nret[i] <- sum(ind)
-ind.ret[i,1] <- nret[i] >= 5
-# one point <= pF1
-ind.ret[i,2] <- any(hydi$RET[ind,"HEAD"] <= 12.5) # having less than half the sample height is impossible (classical ring: 2.5)
-# one point between pF1 and pF2.5
-ind.ret[i,3] <- any(hydi$RET[ind,"HEAD"] > 12.5 & hydi$RET[ind,"HEAD"] <= 350)
-# one point above pF 2.5
-ind.ret[i,4] <- any(hydi$RET[ind,"HEAD"] > 350)
-# for fitting, would be better to ensure that there are measurement below pF1, between pF1 and pF2 and above pF2. But...
-# if (all(ind.ret[i,]) & all(hydi$RET[ind,"THETA"] != 0)){
-if (ind.ret[i,1]){
-	hi <- hydi$RET[ind,"HEAD"]
-	thi <- hydi$RET[ind,"THETA"]
-	# need filtering?
-	if (nret[i] > 20 | any(duplicated(hi))){f <- h.filter(cbind(hi,thi)); hi<-f[,1];thi<-f[,2]}
-	RETfilt <- rbind(RETfilt,data.frame(SAMPLE_ID=sid.ret[i],HEAD=hi,THETA=thi,THETA_FIT=NA))
-}
+RETfilt <- data.frame(SAMPLE_ID=NULL,HEAD=NULL,THETA=NULL,THETA_FIT=NULL)
+for (i in seq_along(sid.ret)){
+	ind <- hydi$RET$SAMPLE_ID == sid.ret[i] & hydi$RET$FLAG
+	nret[i] <- sum(ind)
+	ind.ret[i,1] <- nret[i] >= 5
+	# one point <= pF1
+	ind.ret[i,2] <- any(hydi$RET[ind,"HEAD"] <= 12.5) # having less than half the sample height is impossible (classical ring: 2.5)
+	# one point between pF1 and pF2.5
+	ind.ret[i,3] <- any(hydi$RET[ind,"HEAD"] > 12.5 & hydi$RET[ind,"HEAD"] <= 350)
+	# one point above pF 2.5
+	ind.ret[i,4] <- any(hydi$RET[ind,"HEAD"] > 350)
+	# for fitting, would be better to ensure that there are measurement below pF1, between pF1 and pF2 and above pF2. But...
+	# if (all(ind.ret[i,]) & all(hydi$RET[ind,"THETA"] != 0)){
+	if (ind.ret[i,1]){
+		hi <- hydi$RET[ind,"HEAD"]
+		thi <- hydi$RET[ind,"THETA"]
+		# need filtering?
+		if (nret[i] > 20 | any(duplicated(hi))){f <- h.filter(cbind(hi,thi)); hi<-f[,1];thi<-f[,2]}
+		RETfilt <- rbind(RETfilt,data.frame(SAMPLE_ID=sid.ret[i],HEAD=hi,THETA=thi,THETA_FIT=NA))
+	}
 }
 
 # # paste old THETA_FIT to new RETfilt
@@ -175,15 +171,12 @@ MV.hydi <- cbind(sid.cond,param);names(MV.hydi)[1]<-"SAMPLE_ID"
 save("MV.hydi","ind.cond","CONDfilt","ncond",file="MV_hydi.rdata")
 
 # look at parameters...
-png(filename="./fig/VGfit_thr_ths.png")
+png(filename="../fig/VGfit_thr_ths.png")
 plot(thr~ths,data=VG.hydi)
 dev.off()
-png(filename="./fig/VGfit_alp_n.png")
+png(filename="../fig/VGfit_alp_n.png")
 plot(log10(alp)~log10(n-1),data=VG.hydi)
 dev.off()
-png(filename="./fig/MVGfit_Ks_L.png")
+png(filename="../fig/MVGfit_Ks_L.png")
 plot(log10(Ks)~L,data=MV.hydi)
 dev.off()
-file.copy(from="./fig/VGfit_thr_ths.png",to="../../../MyWater/Europe/Rcode/HYDI/fig/VGfit_thr_ths.png")
-file.copy(from="./fig/VGfit_alp_n.png",to="../../../MyWater/Europe/Rcode/HYDI/fig/VGfit_alp_n.png")
-file.copy(from="./fig/MVGfit_Ks_L.png",to="E:/weyname/Documents/Documents/MyWater/Europe/Rcode/HYDI/fig/MVGfit_Ks_L.png")

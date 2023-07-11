@@ -162,5 +162,3 @@ names(cond)[1:2] <- c("PROFILE_ID","SAMPLE_ID")
 cond$PROFILE_ID <- general$PROFILE_ID[match(cond0$PROFILE_ID,general0$PROFILE_ID)]
 cond$SAMPLE_ID <- basic$SAMPLE_ID[match(cond0$LAYER_ID,basic0$HORIZON_ID)]
 cond[is.na(cond)] <- -999
-
-

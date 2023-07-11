@@ -1,11 +1,11 @@
 # MVG fit
 # fitting Mualem and van Genuchten models to EU-HYDI data
 # 
-# Author: M. Weynsnts
+# Author: M. Weynants
 # Date created: 2013/05/03
 ##################################################################
 
-load("EUHYDI_NA_v1_1.Rdata")
+load("../output/EUHYDI_NA_v1_1.Rdata")
 hydi <- hydi.na;rm(hydi.na)
 
 # set some useful functions
@@ -216,4 +216,4 @@ for (sid in s1){
   lines(theta ~ h, data=mv, col = "green", lty = 2)
   
 }
-# fuck: there is something wrong now....
+#  there is something wrong now....

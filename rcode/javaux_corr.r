@@ -50,3 +50,4 @@ basic1 <- basic.checks(basic1,general1$PROFILE_ID,meth1$CODE_M)
 # sample_ID not in basic
 cond1 <- cond1[cond1$SAMPLE_ID %in% basic1$SAMPLE_ID,]
 names(cond)[15] <- 'K_INV_P9'
+#

@@ -8,7 +8,7 @@
 # GENERAL
 # LC_L1:truncate
 # !!! CAUTION: I am loosing info !!!
-lc<-general1$LC_L1
+lc <- general1$LC_L1
 general1$LC_L1 <- paste(substr(lc,start=1,stop=1),'00',sep='')
 general1$LC_L1[lc == 'ND'] <- 'ND'
 # LC_2
@@ -135,4 +135,4 @@ ret1 <- ret1[ret1$HEAD!=-999,]
 ret1 <- ret.checks(ret1,basic1$SAMPLE_ID,meth1$CODE_M)
 
 # COND
-cond1<-cond.checks(cond,basic1$SAMPLE_ID,meth1$CODE_M)
+cond1 <- cond.checks(cond, basic1$SAMPLE_ID, meth1$CODE_M)

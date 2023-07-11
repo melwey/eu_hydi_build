@@ -26,7 +26,7 @@ if (!is.character(METH_PAR)) warning('METH_PAR must be entered as text')
 if (any(!METH_PAR %in% c('POR_M','BD_M','COARSE_M','OC_M','CACO3_M','PH_H2O_M','PH_KCL_M','EC_M','SALT_M','CEC_M','EX_NA_M','EX_MG_M','EX_K_M','EX_CA_M','ACIDITY_NA4O_M','ACIDITY_KCL_M','P_M','THETA_M','TH_INV_MOD','COND_M','K_INV_MOD'))) warning('METH_PAR must refer to an existing parameter')
 detach(x)
 print('... done')
-# OUTPUT
 
+# OUTPUT
 return(x)
 }

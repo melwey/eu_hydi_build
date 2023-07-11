@@ -65,7 +65,7 @@ chemical1 <- chemical.checks(chemical1,basic1$SAMPLE_ID,meth1$CODE_M)
 psize1[psize1$SAMPLE_ID %in% c(8040023504,8040031506,8040036401),"P_PERCENT"] <- c(0.1,2.1,63.8,6.7,7.7,19.6,0.0,13.8,59.2,6.4,3.2,17.4,1.5,49.8,33.1,3.5,2.9,9.2)
 psize1[psize1$SAMPLE_ID %in% 8040023504,"P_M"] <- 500
 
-psize1 <- psize.checks(psize1,basic1$SAMPLE_ID,meth1$CODE_M)
+psize1 <- psize.checks(psize1, basic1$SAMPLE_ID, meth1$CODE_M)
 
 # ret
 # no data
