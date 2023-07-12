@@ -1,88 +1,86 @@
 # Basic statistics on EU-HYDI
-load("../output/HYDI_SOURCE_nd_qa3.Rdata")
-hydi.na <- lapply(hydi,function(tbl){replace(tbl,tbl==-999 | tbl=="ND",NA)})
+load("../output/EUHYDI_NA_v1_1.Rdata") # hydi.na
 attach(hydi.na)
 
-print("DATABASE COMPLETENESS (in %)")
-print("-- GENERAL --")
+cat("# Basic statistics on EU-HYDI \n\n", file = "../euhydi_stats.md")
+
+cat("## DATABASE COMPLETENESS (in %) \n\n", file = "../euhydi_stats.md", append = TRUE)
+cat("### -- GENERAL -- \n\n", file = "../euhydi_stats.md", append = TRUE)
 Np <- nrow(GENERAL)
-print(paste("Number of entries:",Np))
-print("Minimal requirements")
+cat(paste("Number of entries:",Np,"\n\n"), file = "../euhydi_stats.md", append = TRUE)
+cat("*Minimal requirements* \n\n", file = "../euhydi_stats.md", append = TRUE)
 # coordinates
 ind <- !is.na(GENERAL$X_WGS84)
 pcor <- sum(ind)/Np*100
-print(paste("Geographical coordinates:",round(pcor,digit=2),"%"))
+cat(paste("Geographical coordinates:",round(pcor,digit=2),"%\n\n"), file = "../euhydi_stats.md", append = TRUE)
 
-
-
-print("Other data")
+cat("*Other data* \n\n", file = "../euhydi_stats.md", append = TRUE)
 pG <- pcor
 count=1
 for (icol in 7:60){
 count <- count +1
 pG[count] <- round(sum(!is.na(GENERAL[,icol]))/Np*100,digit=2)
-print(paste(names(GENERAL)[icol],":",pG[count],"%"))
+cat(paste(names(GENERAL)[icol],":",pG[count],"%\n\n"), file = "../euhydi_stats.md", append = TRUE)
 }
 attr(pG,"name") <- c("coordinates",names(GENERAL)[7:60])
 #print(summary(GENERAL))
 
-print("-- BASIC --")
+cat("### -- BASIC --\n\n", file = "../euhydi_stats.md", append = TRUE)
 Ns <- nrow(BASIC)
-print(paste("Number of entries:",Ns))
-print("Minimal requirements")
+cat(paste("Number of entries:",Ns, "\n\n"), file = "../euhydi_stats.md", append = TRUE)
+cat("*Minimal requirements* \n\n", file = "../euhydi_stats.md", append = TRUE)
 pB <- NA
 for (icol in c(4,5,20:23)){
 pB[icol] <- round(sum(!is.na(BASIC[,icol]))/Ns*100,digit=2)
-print(paste(names(BASIC)[icol],":",pB[icol],"%"))
+cat(paste(names(BASIC)[icol],":",pB[icol],"%\n\n"), file = "../euhydi_stats.md", append = TRUE)
 }
-print("Other data")
+cat("*Other data* \n\n", file = "../euhydi_stats.md", append = TRUE)
 for (icol in c(1:3,6:19)){
 pB[icol] <- round(sum(!is.na(BASIC[,icol]))/Ns*100,digit=2)
-print(paste(names(BASIC)[icol],":",pB[icol],"%"))
+cat(paste(names(BASIC)[icol],":", pB[icol],"%\n\n"), file = "../euhydi_stats.md", append = TRUE)
 }
 attr(pB,"name") <- names(BASIC)
 
-print("-- CHEMICAL --")
+cat("### -- CHEMICAL --\n\n", file = "../euhydi_stats.md", append = TRUE)
 N <- nrow(CHEMICAL)
-print(paste("Number of entries:",N))
-print("Minimal requirements")
+cat(paste("Number of entries:",N, "\n\n"), file = "../euhydi_stats.md", append = TRUE)
+cat("*Minimal requirements* \n\n", file = "../euhydi_stats.md", append = TRUE)
 pC <- NA
 for (icol in c(3:10)){
 pC[icol] <- round(sum(!is.na(CHEMICAL[,icol]))/N*100,digit=2)
-print(paste(names(CHEMICAL)[icol],":",pC[icol],"%"))
+cat(paste(names(CHEMICAL)[icol],":",pC[icol],"%\n\n"), file = "../euhydi_stats.md", append = TRUE)
 }
-print("Other data")
+cat("*Other data*\n\n", file = "../euhydi_stats.md", append = TRUE)
 for (icol in c(1:2,11:ncol(CHEMICAL))){
 pC[icol] <- round(sum(!is.na(CHEMICAL[,icol]))/N*100,digit=2)
-print(paste(names(CHEMICAL)[icol],":",pC[icol],"%"))
+cat(paste(names(CHEMICAL)[icol],":",pC[icol],"%\n\n"), file = "../euhydi_stats.md", append = TRUE)
 }
 attr(pC,"name") <- names(CHEMICAL)
 
-print("-- PSIZE --")
+cat("### -- PSIZE --\n\n", file = "../euhydi_stats.md", append = TRUE)
 N <- nrow(PSIZE)
-print(paste("Total number of entries:",N))
-print(paste("Samples with PSIZE:",round(sum(BASIC$SAMPLE_ID %in% PSIZE$SAMPLE_ID)*100/Ns,digit=2)))
+cat(paste("Total number of entries:",N, "\n\n"), file = "../euhydi_stats.md", append = TRUE)
+cat(paste("Samples with PSIZE:",round(sum(BASIC$SAMPLE_ID %in% PSIZE$SAMPLE_ID)*100/Ns,digit=2),"%\n\n"), file = "../euhydi_stats.md", append = TRUE)
 load("../output/psize_qa.rdata")# idn and sum_pn
-print(paste("PSIZE summing to 100%:",round(sum(sum_pn>=99 & sum_pn<=101)*100/length(sum_pn),digit=2),"%"))
+cat(paste("PSIZE summing to 100%:",round(sum(sum_pn>=99 & sum_pn<=101)*100/length(sum_pn),digit=2),"%\n\n"), file = "../euhydi_stats.md", append = TRUE)
 round(sum(sum_pn>=99 & sum_pn<=101)*100/Ns,digit=2)
 pP <- round(sum(sum_pn>=99 & sum_pn<=101)*100/length(sum_pn),digit=2)
 
-print("-- RET --")
+cat("### -- RET --\n\n", file = "../euhydi_stats.md", append = TRUE)
 Nr <- nrow(RET)
-print(paste("Total number of entries:",Nr))
+cat(paste("Total number of entries:",Nr, "\n\n"), file = "../euhydi_stats.md", append = TRUE)
 ret.count <- as.numeric(table(RET$SAMPLE_ID))
-print(paste("Samples with RET:",round(length(ret.count)*100/Ns,digit=2)))
+cat(paste("Samples with RET:",round(length(ret.count)*100/Ns,digit=2), "%\n\n"), file = "../euhydi_stats.md", append = TRUE)
 hist(ret.count[ret.count<65])
-print(paste("Samples with at least 5 points:",round(sum(ret.count >=5)*100/Ns,digit=2),"%"))
+cat(paste("Samples with at least 5 points:",round(sum(ret.count >=5)*100/Ns,digit=2),"%\n\n"), file = "../euhydi_stats.md", append = TRUE)
 
 
-print("-- COND --")
+cat("### -- COND --\n\n", file = "../euhydi_stats.md", append = TRUE)
 N <- nrow(COND)
-print(paste("Total number of entries:",N))
-print(paste("Samples with COND:",round(sum(BASIC$SAMPLE_ID %in% COND$SAMPLE_ID)*100/Ns,digit=2)))
+cat(paste("Total number of entries:",N, "\n\n"), file = "../euhydi_stats.md", append = TRUE)
+cat(paste("Samples with COND:",round(sum(BASIC$SAMPLE_ID %in% COND$SAMPLE_ID)*100/Ns,digit=2),"%\n\n"), file = "../euhydi_stats.md", append = TRUE)
 cond.count <- as.numeric(table(COND$SAMPLE_ID))
-print(paste("Samples with only KSAT:",round(sum(cond.count == 1)*100/Ns,digit=2),"%"))
-print(summary(cond.count))
+cat(paste("Samples with only KSAT:",round(sum(cond.count == 1)*100/Ns,digit=2),"%\n\n"), file = "../euhydi_stats.md", append = TRUE)
 
 print("DESCRIPTIVE STATISTICS")
 print("-- BASIC --")
