@@ -262,7 +262,7 @@ SOURCE : 100 %
 
 Total number of entries: 84559 
 
-Samples with PSIZE: 89.01 
+Samples with PSIZE: 89.01 %
 
 PSIZE summing to 100%: 89.44 %
 
@@ -270,7 +270,7 @@ PSIZE summing to 100%: 89.44 %
 
 Total number of entries: 226705 
 
-Samples with RET: 76.54 
+Samples with RET: 76.54 %
 
 Samples with at least 5 points: 42.82 %
 
@@ -278,9 +278,7 @@ Samples with at least 5 points: 42.82 %
 
 Total number of entries: 113082 
 
-Samples with COND: 33.81 
+Samples with COND: 33.81 %
 
 Samples with only KSAT: 18.94 %
-
-1 1 1 17.90405 2 720 
 
