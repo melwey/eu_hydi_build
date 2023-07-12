@@ -25,7 +25,7 @@ chem <- read.csv("../data/QAmeeting/METHOD/QA_all_NEW/CHEMICAL_M.csv")
 psize <-  read.csv("../data/QAmeeting/METHOD/QA_all_NEW/P_M.csv")
 theta <- read.csv("../data/QAmeeting/METHOD/QA_all_NEW/THETA_M.csv")
 cond <- read.csv("../data/QAmeeting/METHOD/QA_all_NEW/COND_M.csv")
-inv <- read.csv("../.data/QAmeeting/METHOD/QA_all_NEW/INV_M.csv")
+inv <- read.csv("../data/QAmeeting/METHOD/QA_all_NEW/INV_M.csv")
 
 # new metod table
 basic.meth.new <- basic[!duplicated(basic$NEW_CODE_M),c("NEW_CODE_M","NEW_METHOD","NEW_METH_REF","METH_PAR")]
@@ -127,7 +127,7 @@ CHEM$HOC_M[ind.loi] <- 99
 # specific for Norway
 loi2tcNO <- lm(TC~LOI-1,data=CHEM[CHEM$TC_M==150 & CHEM$LOI_M==130 & CHEM$SOURCE=="Kvaerno",])
 # Note on 2014/04/08: correction made: need to rerun.
-CHEM$HOC_M[CHEM$LOI_M!=-999 & CHEM$TC_M!=-999 & CHEM$SOURCE=="Kvaerno"] <- 94
+CHEM$HOC_M[CHEM$LOI_M!=-999 & CHEM$TC_M!=-999 & CHEM$SOURCE=="Kvaerno"] <- 93
 
 # corrected Walkley-Black C recovery: OC = 1.32 WB (dark green)
 wb2oc <- function(x){
@@ -201,10 +201,10 @@ CHEM$HOC_M[ind.mwb] <- 96
 # DC pretreated or calcimetric correction (OC = TC - .12 CaCO3)
 ind.dc <- CHEM$OC_M ==143
 CHEM$HOC[ind.dc] <- CHEM$OC[ind.dc]
-CHEM$HOC_M[ind.dc] <- 0
+CHEM$HOC_M[ind.dc] <- 94
 ind.tc <- CHEM$TC_M %in% c(150,151) # for 150, no idea whether CO3 were removed; for 151, pH<7
 CHEM$HOC[ind.tc] <- CHEM$TC[ind.tc]
-CHEM$HOC_M[ind.tc] <- 0
+CHEM$HOC_M[ind.tc] <- 94
 # HOC<0 transformed to 0
 CHEM$HOC[CHEM$HOC<0 & CHEM$HOC!=-999] <- 0
 
@@ -294,13 +294,15 @@ for (l in 1:nrow(cond)){
 }
 
 # Add HOC conversions codes
-hoc <- data.frame(CODE_M=c(0,94:99),
-	METHOD=c("Conversion from LOI to TC for Norway","No conversion (dry conbustion)","Conversion from uncorrected Walkley-Black to dry conbustion","Conversion from modified Walkley-Black to dry conbustion","Conversion form Tyurin to dry conbustion", "Conversion from corrected Walkley-Black to dry conbustion","Conversion from loss on ignition to dry conbustion"),
+hoc <- data.frame(CODE_M=c(93:99),
+	METHOD=c("Conversion from LOI to TC for Norway","No conversion (dry combustion)","Conversion from uncorrected Walkley-Black to dry combustion","Conversion from modified Walkley-Black to dry combustion","Conversion form Tyurin to dry combustion", "Conversion from corrected Walkley-Black to dry combustion","Conversion from loss on ignition to dry combustion"),
 	METH_REF=c("EU-HYDI report"),
 	METH_PAR="HOC_M")
 
 # replace table method
 hydi$METHOD <- rbind(meth.new[meth.new$CODE_M!=-999,],hoc)
+# remove rows with is.na(CODE_M)
+hydi$METHOD <- hydi$METHOD[!is.na(hydi$METHOD$CODE_M), ] 
 hydi$METHOD <- replace(hydi$METHOD,is.na(hydi$METHOD),"ND")
 hydi$METHOD <- hydi$METHOD[order(hydi$METHOD$CODE_M),]
 
