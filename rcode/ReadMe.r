@@ -35,6 +35,9 @@ source("QA_corr.r")
 # generates HYDI_SOURCE_nd_qa3.Rdata
 source("QA_meth.r")
 
+# correct Cornelis coords
+source("hydi_corr.r")
+
 # generates set of csv files
 source("HYDI2csv.r")
 
@@ -43,9 +46,6 @@ source("HYDI2mdb.r")
 
 # filters RET and COND data and fit MVG sequentially
 source("mvg_fit.r")
-
-# correct Cornelis coords
-source("hydi_corr.r")
 
 # Basic statistics on EU-HYDI
 source("hydiExplore.r")

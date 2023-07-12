@@ -6,7 +6,7 @@
 
 # HYDY2mdb.r
 
-load("../output/HYDI_SOURCE_nd_qa3.Rdata")
+load("../output/EUHYDI_v1_1.Rdata")
 
 # clean hydi of unnecessary columns
 hydi$PSIZE <- hydi$PSIZE[,-c(grep("^ID$",names(hydi$PSIZE)),grep("^FLAG$",names(hydi$PSIZE)))] 
@@ -237,7 +237,7 @@ hydi$REFERENCES <- references
 
 ## ------ export to csv ## 2023/03/26 --------
 # create export dir
-export_dir <- "../output/HYDI_SOURCE_nd_qa3_csv"
+export_dir <- "../output/EUHYDI_v1_1_csv"
 dir.create(export_dir)
 for (tbl in names(hydi)){
   readr::write_csv(hydi[[tbl]], file = paste(export_dir,"/",tbl,".csv", sep=""))
