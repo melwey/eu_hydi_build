@@ -15,7 +15,9 @@ tmp <- as.character(format(hydi$GENERAL$Y_WGS84[ind],digit = 4))
 y <- as.numeric(substr(tmp,start = 1,stop = 2)) + round(as.numeric( substr(tmp, start = 3, stop = 5)) /0.6, digit = 2)
 hydi$GENERAL$Y_WGS84[ind] <- y
 
-hydi$GENERAL$COMMENTS2[ind] <- "geog. coord. corrected by M. Weynants"
+hydi$GENERAL$COMMENTS2[ind] <- "geog. coord. corrected by M. Weynants from Degree.Minute to digital degrees"
+
+# hydi.METH
 
 # save new hydi
 save("hydi", file = "../output/EUHYDI_v1_1.Rdata")
@@ -26,7 +28,7 @@ for (i in 1:length(hydi)){
   }
 # save hydi.na
 hydi.na <- hydi
-save("hydi.na", file = "EUHYDI_NA_v1_1.Rdata")
+save("hydi.na", file = "../output/EUHYDI_NA_v1_1.Rdata")
 
 # create shapefile with GENERAL
 library("sf")
@@ -34,13 +36,15 @@ ind <- !is.na(hydi.na$GENERAL$X_WGS84)
 source_4326 <- hydi.na$GENERAL[ind, ] %>%
             st_as_sf(coords = c("X_WGS84", "Y_WGS84"), crs = 4326)
 
-europe = c("Austria", "Belgium", "Czechia", "Denmark", "England", "Finland", "France", "Germany", "Greece", "Hungary", "Italy", "Netherlands", "Norway(?!:Svalbard)", "Poland", "Portugal", "Russia", "Slovakia", "Spain", "Sweden", "Ukraine", "UK:Great Britain")
+europe = c("Albania", "Austria", "Belarus", "Belgium", "Bosnia", "Bulgaria", "Croatia", "Cyprus", "Czechia", "Denmark", "England", "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Italy", "Kosovo", "Lithuania", "Latvia", "Malta", "Macedonia", "Montenegro", "Moldova", "Netherlands", "Norway", "Poland", "Portugal", "Romania", "Russia", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Turkey", "Ukraine", "UK:Great Britain")
 
+library("tidyverse")
 ggplot() +
   geom_sf(data = st_as_sf(maps::map("world", regions = europe, plot=FALSE, fill = TRUE))) +
   geom_sf(data = source_4326,
           aes(colour = SOURCE), shape = 1) +
-  xlim(-15,40)
+  xlim(-15, 40) +
+  ylim(33, 72)
 
 ggsave("../fig/HYDI_SOURCE.png", width = 14, height = 7, units = "in")
 
@@ -53,7 +57,9 @@ ggplot() +
       ), crs = 3035
       )) +
   geom_sf(data = source_3035,
-          aes(colour = SOURCE), shape = 1)
+          aes(colour = SOURCE), shape = 1) +
+  xlim(2500000, 6355857) +
+  ylim(1557591, 5500000)
 ggsave("../fig/hydi_3035.png", width = 12, height = 10)
 
 st_write(source_4326, "../output/hydi_4326.geojson")
