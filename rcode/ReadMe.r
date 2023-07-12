@@ -35,7 +35,7 @@ source("QA_corr.r")
 # generates HYDI_SOURCE_nd_qa3.Rdata
 source("QA_meth.r")
 
-# correct Cornelis coords
+# correct Cornelis coords. generates ../output/EUHYDI_NA_v1_1.Rdata
 source("hydi_corr.r")
 
 # generates set of csv files
