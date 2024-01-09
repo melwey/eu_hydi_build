@@ -7,6 +7,18 @@ library(sf)
 library(optimx)
 # Other needed functions are:
 
+# Path to data
+path2data <- readline(prompt = "Enter path to data, e.g., ~/EU-HYDI/ContributedData ")
+while (! dir.exists(path2data)){
+  path2data <- readline(prompt = "Enter a valid path to data directory ")
+}
+last_el <- substring(path2data, nchar(path2data))
+while ( last_el %in% c( "/", "\\") ){
+  path2data <- strtrim(path2data, width=nchar(path2data)-1)
+  last_el <- substring(path2data, nchar(path2data))
+  }
+print(path2data)
+
 # set path: set current directory to eu_hydi_build/rcode
 setwd("./rcode")
 
