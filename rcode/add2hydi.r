@@ -31,28 +31,28 @@ dirs <- c("Cranfield","Morari")
 # Add Cranfield data
 for (i in 1:2){
 # GENERAL
-general <- read.csv(paste('../data/',dirs[i],'/GENERAL.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip = TRUE)
+general <- read.csv(file.path(path2data,dirs[i],'GENERAL.csv'),header=TRUE,as.is=TRUE,blank.lines.skip = TRUE)
 # remove empty lines
 general<- general[!is.na(general[[1]]),]
 # METHOD
-meth <- read.csv(paste('../data/',dirs[i],'/METHOD.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
+meth <- read.csv(file.path(path2data,dirs[i],'METHOD.csv'),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 meth <- meth[!is.na(meth[[1]]),]
 meth$METH_PAR <- toupper(meth$METH_PAR)
 # BASIC
-basic <- read.csv(paste('../data/',dirs[i],'/BASIC.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
+basic <- read.csv(file.path(path2data,dirs[i],'BASIC.csv'),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 basic <- basic[!is.na(basic[[1]]),]
 # CHEMICAL
-chemical <- read.csv(paste('../data/',dirs[i],'/CHEMICAL.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
+chemical <- read.csv(file.path(path2data,dirs[i],'CHEMICAL.csv'),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 chemical <- chemical[!is.na(chemical[[1]]),]
 names(chemical) <- toupper(names(chemical))
 # PSIZE
-psize <- read.csv(paste('../data/',dirs[i],'/PSIZE.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
+psize <- read.csv(file.path(path2data,dirs[i],'PSIZE.csv'),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 psize <- psize[!is.na(psize[[1]]),]
 # RET
-ret <- read.csv(paste('../data/',dirs[i],'/RET.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
+ret <- read.csv(file.path(path2data,dirs[i],'RET.csv'),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 ret <- ret[!is.na(ret[[1]]),]
 # COND
-cond <- read.csv(paste('../data/',dirs[i],'/COND.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
+cond <- read.csv(file.path(path2data,dirs[i],'COND.csv'),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 cond <- cond[!is.na(cond[[1]]),]
 
 # remove all unused codes from meth
