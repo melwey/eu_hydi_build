@@ -4,13 +4,13 @@
 # Date created: 2012/12/19
 #####################################################################
 # TABLES in csv2
-general <- read.csv2(paste('../data/',dirs[i],'/GENERAL.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip = TRUE)
-basic <- read.csv2(paste('../data/',dirs[i],'/BASIC.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip = TRUE)
-chemical <- read.csv2(paste('../data/',dirs[i],'/CHEMICAL.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip = TRUE)
-psize <- read.csv2(paste('../data/',dirs[i],'/PSIZE.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip = TRUE)
-ret <- read.csv2(paste('../data/',dirs[i],'/RET.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip = TRUE)
-cond <- read.csv2(paste('../data/',dirs[i],'/COND.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip = TRUE)
-meth <- read.csv2(paste('../data/',dirs[i],'/METHOD.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip = TRUE)
+general <- read.csv2(file.path(path2data,dirs[i],'GENERAL.csv'),header=TRUE,as.is=TRUE,blank.lines.skip = TRUE)
+basic <- read.csv2(file.path(path2data,dirs[i],'BASIC.csv'),header=TRUE,as.is=TRUE,blank.lines.skip = TRUE)
+chemical <- read.csv2(file.path(path2data,dirs[i],'CHEMICAL.csv'),header=TRUE,as.is=TRUE,blank.lines.skip = TRUE)
+psize <- read.csv2(file.path(path2data,dirs[i],'PSIZE.csv'),header=TRUE,as.is=TRUE,blank.lines.skip = TRUE)
+ret <- read.csv2(file.path(path2data,dirs[i],'RET.csv'),header=TRUE,as.is=TRUE,blank.lines.skip = TRUE)
+cond <- read.csv2(file.path(path2data,dirs[i],'COND.csv'),header=TRUE,as.is=TRUE,blank.lines.skip = TRUE)
+meth <- read.csv2(file.path(path2data,dirs[i],'METHOD.csv'),header=TRUE,as.is=TRUE,blank.lines.skip = TRUE)
 
 # GENERAL
 general0 <- general

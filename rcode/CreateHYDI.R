@@ -51,7 +51,7 @@ CHEMICAL[,c(3,5,7,9,11,13,15,17,19,21,23,25,26,28)] <- as.numeric(CHEMICAL[,c(3,
 contr <- c('Anaya','Goncalves','Iovino','Katterer','Mako','Patyka','Schindler','Shein','Javaux','Daroussin','Romano','Kvaerno','Lamorski','Lilly','Houskova','Strauss','Matula','Cornelis') # etc.
 dirs <- contr
 DB <- vector("list",length(dirs)); names(DB)<-dirs
-for (i in 1:18){
+for (i in 1:length(contr)){
 print('-----------------')
 print(dirs[i])
 print('-----------------')
@@ -63,10 +63,10 @@ if (exists('general1')) rm(general1,basic1,chemical1,psize1,ret1,cond1,meth1,tse
 # read csv files
 # GENERAL
 # ---- 2023/04/05 fix: files were imported without specifying encoding and special characters were scrambled
-if (file.exists(paste('../data/',dirs[i],'/general_utf8.csv',sep=''))) {
-  general <- read.csv(paste('../data/',dirs[i],'/general_utf8.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip = TRUE)
+if (file.exists(file.path(path2data,dirs[i],'general_utf8.csv'))) {
+  general <- read.csv(file.path(path2data,dirs[i],'general_utf8.csv'),header=TRUE,as.is=TRUE,blank.lines.skip = TRUE)
 } else {
-  general <- read.csv(paste('../data/',dirs[i],'/GENERAL.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip = TRUE)
+  general <- read.csv(file.path(path2data,dirs[i],'GENERAL.csv'),header=TRUE,as.is=TRUE,blank.lines.skip = TRUE)
 }
 # ------
 # remove empty lines
@@ -74,25 +74,25 @@ general<- general[!is.na(general[[1]]),]
 # METHOD
 # 2023/04/18 exported in utf8 because impossible to import Straus as is invalid multibyte string at '<d6>NOR<4d> L 1068'
 if (grepl("Strauss",dirs[i])) {
-  path <- paste('../data/',dirs[i],'/METHOD_utf8.csv',sep='')
-} else {path <- paste('../data/',dirs[i],'/METHOD.csv',sep='')}
+  path <- file.path(path2data,dirs[i],'METHOD_utf8.csv')
+} else {path <- file.path(path2data,dirs[i],'METHOD.csv')}
 meth <- read.csv(path,header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 meth <- meth[!is.na(meth[[1]]),]
 # BASIC
-basic <- read.csv(paste('../data/',dirs[i],'/BASIC.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
+basic <- read.csv(file.path(path2data,dirs[i],'BASIC.csv'),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 basic <- basic[!is.na(basic[[1]]),]
 # CHEMICAL
-chemical <- read.csv(paste('../data/',dirs[i],'/CHEMICAL.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
+chemical <- read.csv(file.path(path2data,dirs[i],'CHEMICAL.csv'),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 chemical <- chemical[!is.na(chemical[[1]]),]
 names(chemical) <- toupper(names(chemical))
 # PSIZE
-psize <- read.csv(paste('../data/',dirs[i],'/PSIZE.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
+psize <- read.csv(file.path(path2data,dirs[i],'PSIZE.csv'),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 psize <- psize[!is.na(psize[[1]]),]
 # RET
-ret <- read.csv(paste('../data/',dirs[i],'/RET.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
+ret <- read.csv(file.path(path2data,dirs[i],'RET.csv'),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 ret <- ret[!is.na(ret[[1]]),]
 # COND
-cond <- read.csv(paste('../data/',dirs[i],'/COND.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
+cond <- read.csv(file.path(path2data,dirs[i],'COND.csv'),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 cond <- cond[!is.na(cond[[1]]),]
 
 # clean specific contributions to match guidelines
@@ -126,11 +126,11 @@ cond1 <- cond.checks(cond,basic1[[2]],meth1[[1]])
 
 if (!(all(general1$REL_T_SER == -999) | all(general1$REL_T_SER == 'ND'))){
 # TSERMETA
-tsermeta <- read.csv(paste('../data/',dirs[i],'/TSERMETA.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
+tsermeta <- read.csv(file.path(path2data,dirs[i],'TSERMETA.csv'),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 tsermeta <- tsermeta[!is.na(tsermeta[[1]]),]
 tsermeta1 <- tsermeta.checks(tsermeta)
 # TSERDATA
-tserdata <- read.csv(paste('../data/',dirs[i],'/TSERDATA.csv',sep=''),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
+tserdata <- read.csv(file.path(path2data,dirs[i],'TSERDATA.csv'),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 tserdata <- tserdata[!is.na(tserdata[[1]]),]
 tserdata1 <- tserdata.checks(meth)
 } else {tsermeta1<-NULL;tserdata1<-NULL}
@@ -173,7 +173,7 @@ names(DB[[i]]) <- c('general','basic','chemical','psize','ret','cond','meth','ts
 
 # add greek
 # load("E:/weyname/Documents/Documents/MyWATER/Nestos-GR/Rcode/GRhydi.Rdata")
-load("../data/Bilas/Nestos-GR/Rcode/GRhydi.Rdata")
+load(file.path(path2data,"Bilas/Nestos-GR/Rcode/GRhydi.Rdata"))
 DB[[19]] <- GRhydi
 names(DB)[19] <- "Bilas"
 
