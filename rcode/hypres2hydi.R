@@ -13,7 +13,7 @@ require(RODBC);require(ISOcodes)
 # load original hypres
 # connect to database
 ch <- odbcDriverConnect(paste("DRIVER={Microsoft Access Driver (*.mdb, *.accdb)}",
-				"DBQ=../data/hypres access ver3.mdb",sep=";"))
+				paste("DBQ=", file.path(path2data, "hypres access ver3.mdb"), sep=""),sep=";"))
 T <- sqlTables(ch); print(T[T$TABLE_TYPE=="TABLE",3])
 # querry data
 df.basic <- sqlQuery(ch,"SELECT * FROM BASICDATA",stringsAsFactors=FALSE)
