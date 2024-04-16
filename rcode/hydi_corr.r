@@ -1,22 +1,6 @@
 # EU-HYDI: errata corrections
 load("../output/HYDI_SOURCE_nd_qa3.Rdata")
 
-# geographic coordinates from Wim Cornelis are wrong. Grades and minutes should be transformed into decimal grades.
-# select data from Cornelis in table GENERAL
-pid <- hydi$GENERAL$PROFILE_ID[hydi$GENERAL$SOURCE == "Cornelis"]
-hydi$GENERAL[hydi$GENERAL$PROFILE_ID %in% pid, 1:8]
-ind <- hydi$GENERAL$PROFILE_ID >= 5600103 & hydi$GENERAL$PROFILE_ID <= 5600120
-
-tmp <- as.character(format(hydi$GENERAL$X_WGS84[ind],digit = 3))
-x <- as.numeric(substr(tmp,start = 1,stop = 1)) + round(as.numeric( substr(tmp, start = 2, stop = 4)) /0.6, digit = 2)
-hydi$GENERAL$X_WGS84[ind] <- x
-
-tmp <- as.character(format(hydi$GENERAL$Y_WGS84[ind],digit = 4))
-y <- as.numeric(substr(tmp,start = 1,stop = 2)) + round(as.numeric( substr(tmp, start = 3, stop = 5)) /0.6, digit = 2)
-hydi$GENERAL$Y_WGS84[ind] <- y
-
-hydi$GENERAL$COMMENTS2[ind] <- "geog. coord. corrected by M. Weynants from Degree.Minute to digital degrees"
-
 # hydi.METH
 
 # save new hydi
@@ -62,5 +46,5 @@ ggplot() +
   ylim(1557591, 5500000)
 ggsave("../fig/hydi_3035.png", width = 12, height = 10)
 
-st_write(source_4326, "../output/hydi_4326.geojson")
-st_write(source_3035, "../output/hydi_3035.geojson")
+st_write(source_4326, "../output/hydi_4326.geojson", append = FALSE)
+st_write(source_3035, "../output/hydi_3035.geojson", append = FALSE)

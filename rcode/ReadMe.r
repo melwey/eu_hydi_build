@@ -8,6 +8,7 @@ library(optimx)
 # Other needed functions are:
 
 # Path to data
+# path2data <- "~/Documents/JRC/EU_HYDI/EU_HYDI/ContributedData"
 path2data <- readline(prompt = "Enter path to data, e.g., ~/EU-HYDI/ContributedData ")
 while (! dir.exists(path2data)){
   path2data <- readline(prompt = "Enter a valid path to data directory ")
@@ -17,9 +18,10 @@ while ( last_el %in% c( "/", "\\") ){
   path2data <- strtrim(path2data, width=nchar(path2data)-1)
   last_el <- substring(path2data, nchar(path2data))
   }
-print(path2data)
+print(paste("Data will be loaded from", path2data))
 
 # set path: set current directory to eu_hydi_build/rcode
+# setwd("~/Documents/JRC/EU_HYDI/eu_hydi_build/rcode/")
 setwd("./rcode")
 
 # create output and figs directories
@@ -28,7 +30,11 @@ if (!dir.exists("../output")) {
     }
 if (!dir.exists("../fig")) {
     dir.create("../fig")
-    }
+}
+
+if (!dir.exists("../gis")) {
+  dir.create("../gis")
+}
 
 # Execute scripts
 

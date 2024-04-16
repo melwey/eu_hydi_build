@@ -235,11 +235,21 @@ references = as.data.frame(matrix(c(
 
 hydi$REFERENCES <- references
 
+# to do: fix NA in LOC_COOR_X _Y
+library(tidyverse)
+hydi$GENERAL <- hydi$GENERAL %>% tidyr::replace_na(list(LOC_COOR_X = "ND", LOC_COOR_Y = "ND"))
+# 
 ## ------ export to csv ## 2023/03/26 --------
 # create export dir
 export_dir <- "../output/EUHYDI_v1_1_csv"
 dir.create(export_dir)
 for (tbl in names(hydi)){
-  readr::write_csv(hydi[[tbl]], file = paste(export_dir,"/",tbl,".csv", sep=""))
+  # use write_excel_csv to include a UTF-8 Byte order mark which indicates to Excel the csv is UTF-8 encoded.
+  readr::write_excel_csv(hydi[[tbl]],
+                   file = paste(export_dir,"/",tbl,".csv", sep=""),
+                   # na = "ND",
+                   # would that fix the problem?
+                   # quote = "all"
+                   )
 }
-## -------
+# -------
