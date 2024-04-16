@@ -2,11 +2,11 @@
 
 Import, clean and harmonize data for the European Hydrolopedological Inventory (EU-HYDI).
 
-![Spatial distribution of EU-HYDI entries with geographical coordinates. The colours represent the different contributors.](./fig/hydi_3035.png)
+![Spatial distribution of EU-HYDI entries with geographical coordinates. The colours represent the different contributors. NB: for most contributions the coordinates are not precise and are therefore not suitable for spatial analysis](./fig/hydi_3035.png)
 
-The EU-HYDI is a dataset of **soil hydrological, physical and chemical properties** assembled in 2013 in the context of EU FP7 project My Water. It contains data from more than 18000 soil samples contributed by 27 institutions across Europe. The compilation work was led by Mélanie Weynants at the Joint Research Centre of the European Commission (JRC).
+The EU-HYDI is a dataset of **soil hydrological, physical and chemical properties** assembled in 2013 in the context of EU FP7 project MyWater. It contains data from more than 18000 soil samples contributed by 27 institutions across Europe. The compilation work was led by Mélanie Weynants at the Joint Research Centre of the European Commission (JRC).
 
-This repository contains all R scripts used to import, clean and harmonize the data provided by contributors. The intellectual property and rights to the raw data remain with the individual contributors. Copies of the compiled dataset are hosted at the JRC and with the invidual contributors. A subset of the EU-HYDI is licensed for public use under the terms of the [European Soil Data Centre (ESDAC)](https://esdac.jrc.ec.europa.eu) of the JRC, from where it can be accessed.
+This repository contains all R scripts used to import, clean and harmonize the data provided by contributors. The intellectual property and rights to the raw data remain with the individual contributors. Copies of the compiled dataset are hosted at the JRC and with the individual contributors. A subset of the EU-HYDI is licensed for public use under the terms of the [European Soil Data Centre (ESDAC)](https://esdac.jrc.ec.europa.eu) of the JRC, from where it can be accessed.
 
 ## Workflow
 
