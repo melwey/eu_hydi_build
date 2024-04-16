@@ -16,24 +16,27 @@ unique(hydi$GENERAL[hydi$GENERAL$X_WGS!=-999,c("SOURCE","LOC_COOR_SYST")])
 # require("maptools")
 # packages no longer maintained after 2023
 # use sf instead
-library("sf")
-require("maps")
+library(sf)
+# require("maps")
+library(rnaturalearth)
+library(rnaturalearthdata)
 require(foreign)
-library(ggplot2)
 
 loc2wgs <- function(ind, loc_crs, country, cols = 2:3){
   coord <- cbind(x = as.numeric(hydi$GENERAL[ind,cols[1]]), y = as.numeric(hydi$GENERAL[ind,cols[2]]))
   print(head(coord))
   d <- hydi$GENERAL[ind,][!is.na(coord[,1]) & !is.na(coord[,2]) & coord[,1] != -999,]
   source_loc <- st_as_sf(d, crs = loc_crs, coords = cols)
-  sfcountry = st_as_sf(map("world", regions = country, plot=FALSE, fill = TRUE), crs = loc_crs)
+  # sfcountry = st_as_sf(map("world", regions = country, plot=FALSE, fill = TRUE), crs = loc_crs)
+  sfcountry <- ne_countries(scale = 10, country = country, returnclass = "sf")
   f1 <- ggplot2::ggplot() +
     geom_sf(data = sfcountry) +
     geom_sf(data = source_loc) +
+    coord_map(loc_crs) +
     ggtitle(loc_crs$input)
   source_wgs <- st_transform(source_loc, st_crs(4326))
   f2 <- ggplot() +
-    geom_sf(data = st_as_sf(map("world", regions = country, plot=FALSE, fill = TRUE))) +
+    geom_sf(data = sfcountry) +
     geom_sf(data = source_wgs) +
     ggtitle("EPSG:4326")
   coord[!is.na(coord[,1]) & !is.na(coord[,2]) & coord[,1] != -999,] <- st_coordinates(source_wgs)
@@ -42,14 +45,14 @@ loc2wgs <- function(ind, loc_crs, country, cols = 2:3){
 }
 
 print("Houskova")
-ind <- hydi$GENERAL$SOURCE=="Houskova" & grepl("JTSK recalculated to WGS",hydi$GENERAL$LOC_COOR_SYST)
+ind <- hydi$GENERAL$SOURCE=="Houskova" & grepl("JTSK recalculated to WGS",hydi$GENERAL$LOC_COOR_SYST, fixed = TRUE)
 hydi$GENERAL$LOC_COOR_SYST[ind] <- "JTSK recalculated to WGS4"
 print("Houskova_HYPRES")
 ind <- hydi$GENERAL$SOURCE=="Houskova_HYPRES" & hydi$GENERAL$LOC_COOR_Y != "ND"
 dms2wgs<-function(a){if (length(a)==3){b=as.numeric(a[[1]]) + as.numeric(a[[2]])/60 + as.numeric(a[[3]])/3600};if (length(a)==2){b=as.numeric(a[[1]]) + as.numeric(a[[2]])/60}; if (length(a)==1){b=as.numeric(a[[1]])};b}
 x <- as.vector(sapply(strsplit(hydi$GENERAL$LOC_COOR_Y[ind],"/"),dms2wgs))
 y <- as.vector(sapply(strsplit(hydi$GENERAL$LOC_COOR_X[ind],"/"),dms2wgs))
-wgs84<-st_crs("EPSG:4326")#CRS("+proj=latlon +datum=WGS84")
+wgs84<-st_crs(4326) #CRS("+proj=latlon +datum=WGS84")
 map("world",xlim=c(-12,30),ylim=c(35,60))
 # replace sp::SpatialPoints by 
 # points(SpatialPoints(cbind(x,y),proj4string=wgs84),col="blue")
@@ -63,14 +66,14 @@ print("Anaya")
 #  Code:EPSG::1633; Name:ED50 to WGS 84 (28) 
 #  Code:EPSG::1133; Name:ED50 to WGS 84 (1) 
 # 2023/04/20: replace sp::readShapePoints by sf::st_read
-shp <- st_read("../data/Anaya/Andalusia_Localization sample points/Andalusia_Localization sample points/Puntos_Andalucia.shp")
+shp <- st_read(file.path(path2data,"Anaya/Andalusia_Localization sample points/Andalusia_Localization sample points/Puntos_Andalucia.shp"))
 c<-st_coordinates(shp)
 pid <- shp$PROFILE_ID
 
 ind <- hydi$GENERAL$SOURCE=="Anaya"
 # something's wrong. Either false northing or latitude of origin
 utm30N <- st_crs(23030) #CRS("+init=epsg:23030 +towgs84=-131,-100.3,-163.4,-1.244,-0.02,-1.144,9.39")
-utm30N <- st_crs("+init=epsg:23030 +towgs84=-87,-98,-121")
+# utm30N <- st_crs("+init=epsg:23030 +towgs84=-87,-98,-121")
 
 hydi$GENERAL[ind,c("LOC_COOR_X","LOC_COOR_Y")] <- coord <- c[match(hydi$GENERAL[ind,"PROFILE_ID"],pid),]
 rownames(coord)<-NULL
@@ -82,7 +85,7 @@ Spain = st_as_sf(map("world", regions = "Spain", plot=FALSE, fill = TRUE), crs =
 ggplot2::ggplot() +
   geom_sf(data = Spain) +
   geom_sf(data = anaya_shp, aes(fill = PROFILE_ID))
-st_write(anaya_shp,dsn="./gis/anay.geojson", append=FALSE)
+st_write(anaya_shp,dsn="../gis/anaya.geojson", append=FALSE)
 anaya_wgs <- st_transform(anaya_shp,st_crs(4326))
 ggplot() +
   geom_sf(data = st_as_sf(map("world", regions = "Spain", plot=FALSE, fill = TRUE))) +
@@ -93,7 +96,8 @@ print("Cornelis")
 # LAMBERT-BEER (what year? 1950 (epsg:21500), 1972 (epsg:31370), 2005 (epsg:3447), 2008 (epsg:3812)?)
 ind <- hydi$GENERAL$SOURCE == "Cornelis"
 # LBB72 <- CRS("+proj=lcc +ellps=intl +x_0=150000.01256 +y_0=5400088.4378 +lon_0=brussels +lat_0=90 +lat_1=49.8333339 +lat_2=51.16666723333333 +towgs84=-125.8,79.9,-100.5")
-LBB72 <- st_crs("+init=epsg:31370")
+# LBB72 <- st_crs("+init=epsg:31370")
+LBB72 <- st_crs(31370)
 coord <- cbind(as.numeric(hydi$GENERAL[ind,2]),as.numeric(hydi$GENERAL[ind,3]))
 d <- hydi$GENERAL[ind,][coord[,1]!=-999,]
 cornelis_shp <- st_as_sf(d, crs = LBB72, coords = c("LOC_COOR_X","LOC_COOR_Y"))
@@ -103,10 +107,29 @@ ggplot2::ggplot() +
   geom_sf(data = be) +
   geom_sf(data = cornelis_shp, aes(fill = PROFILE_ID))
 cornelis_wgs <- st_transform(cornelis_shp,st_crs(4326))
+# original wgs
+cornelis_wgs1 <- st_as_sf(hydi$GENERAL %>% filter(SOURCE == "Cornelis" & X_WGS84 != -999), crs = st_crs(4326), coords = c("X_WGS84", "Y_WGS84"))
+# add transformed lambert to wgs
+hydi$GENERAL[ind,5:6][coord[,1]!=-999,]<- st_coordinates(cornelis_wgs)
+# wgs geographic coordinates from https://doi.org/10.1016/j.still.2008.03.003 (Wim Cornelis) are wrong. Degrees and minutes should be transformed into decimal degrees
+# select data from Cornelis in table GENERAL
+pid <- hydi$GENERAL$PROFILE_ID[ind]
+hydi$GENERAL[hydi$GENERAL$PROFILE_ID %in% pid, 1:8]
+ind1 <- hydi$GENERAL$PROFILE_ID >= 5600103 & hydi$GENERAL$PROFILE_ID <= 5600120
+tmp <- as.character(format(hydi$GENERAL$X_WGS84[ind1],digit = 3))
+x <- as.numeric(substr(tmp,start = 1,stop = 1)) + round(as.numeric( substr(tmp, start = 2, stop = 4)) /0.6, digit = 2)
+hydi$GENERAL$X_WGS84[ind1] <- x
+tmp <- as.character(format(hydi$GENERAL$Y_WGS84[ind1],digit = 4))
+y <- as.numeric(substr(tmp,start = 1,stop = 2)) + round(as.numeric( substr(tmp, start = 3, stop = 5)) /0.6, digit = 2)
+hydi$GENERAL$Y_WGS84[ind1] <- y
+hydi$GENERAL$COMMENTS2[ind1] <- "Approximate geog. coord. corrected by M. Weynants from Degree.Minute to digital degrees"
+cornelis_wgs2 <- st_as_sf(hydi$GENERAL[ind1,], crs = st_crs(4326), coords = c("X_WGS84", "Y_WGS84"))
 ggplot() +
   geom_sf(data = st_as_sf(map("world", regions = "Belgium", plot=FALSE, fill = TRUE))) +
-  geom_sf(data = cornelis_wgs)
-hydi$GENERAL[ind,5:6][coord[,1]!=-999,]<- st_coordinates(cornelis_wgs)
+  geom_sf(data = cornelis_wgs, colour = "yellow", shape = 'o') + 
+  geom_sf(data = cornelis_wgs1, colour = "cyan", shape = 'o') +
+  geom_sf(data = cornelis_wgs2, colour = "green", shape = 'o') + 
+  geom_sf(data = st_as_sf(hydi$GENERAL %>% filter(SOURCE == "Cornelis" & X_WGS84 != -999), crs = st_crs(4326), coords = c("X_WGS84", "Y_WGS84")), colour = "black", shape = '-')
 
 # Wosten_HYPRES
 # -999
@@ -127,16 +150,17 @@ print("Iovino")
 # UTM 33S (why S???)
 #?PROJCS["ED_1950_UTM_Zone_33N",GEOGCS["GCS_European_1950",DATUM["D_European_1950",SPHEROID["International_1924",6378388.0,297.0]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["False_Easting",500000.0],PARAMETER["False_Northing",0.0],PARAMETER["Central_Meridian",15.0],PARAMETER["Scale_Factor",0.9996],PARAMETER["Latitude_Of_Origin",0.0],UNIT["Meter",1.0],AUTHORITY["EPSG",23033]]
 # transformation epsg:1143 (ED50 to WGS84 (11))
-UTM33S <- st_crs("+init=epsg:23033 +towgs84=-97,-88,-135")
+UTM33S <-  st_crs("+init=epsg:23033 +towgs84=-97,-88,-135") # st_crs(23033) #
 ind <- hydi$GENERAL$SOURCE == "Iovino"
 # # 2023 update
 # coord <- cbind(as.numeric(hydi$GENERAL[ind,2]),as.numeric(hydi$GENERAL[ind,3]))
 # iovino_sp <- SpatialPoints(coord[coord[,1]!=-999,],proj4string=UTM33S)
 # # transform
 # iovino_wgs84 <- spTransform(iovino_sp,wgs84)
-# # writePointsShape(iovino_wgs84,fn="./gis/iovino_wgs84.shp")
+# # writePointsShape(iovino_wgs84,fn="../gis/iovino_wgs84.shp")
 # hydi$GENERAL[ind,5:6][coord[,1]!=-999,]<- coordinates(iovino_wgs84)
 f <- loc2wgs(ind, loc_crs = UTM33S, "Italy")
+f[["fig2"]]
 hydi$GENERAL[ind, 5:6] <- f[["coord"]]
 
 print("Katterer")
@@ -149,9 +173,10 @@ ind <- hydi$GENERAL$SOURCE == "Katterer"
 # katterer_sp <- SpatialPoints(coord[coord[,1]!=-999,],proj4string=sweref99)
 # # transform
 # katterer_wgs84 <- spTransform(katterer_sp,wgs84)
-# writePointsShape(katterer_wgs84,fn="./gis/katterer_wgs84")
+# writePointsShape(katterer_wgs84,fn="../gis/katterer_wgs84")
 # hydi$GENERAL[ind,5:6][coord[,1]!=-999,]<- coordinates(katterer_wgs84)
 f <- loc2wgs(ind, loc_crs = sweref99, "Sweden", cols = 3:2)
+f[["fig2"]]
 hydi$GENERAL[ind, 5:6] <- f[["coord"]]
 
 print("Kvaerno")
@@ -171,13 +196,14 @@ utm32_wgs <- st_crs(32632) # st_crs("+init=epsg:32632")
 # coord <- cbind(as.numeric(hydi$GENERAL[ind,2]),as.numeric(hydi$GENERAL[ind,3]))
 # 
 # norway_utm32_sp <- SpatialPoints(coord[coord[,1]!=-999,],proj4string=utm32_ed50)
-# #writePointsShape(norway_utm32_sp,fn="./gis/norway_utm32")
+# #writePointsShape(norway_utm32_sp,fn="../gis/norway_utm32")
 # # transform
 # norway_wgs84 <- spTransform(norway_utm32_sp,wgs84)
-# writePointsShape(norway_wgs84,fn="./gis/norway_wgs84_1")
+# writePointsShape(norway_wgs84,fn="../gis/norway_wgs84_1")
 # hydi$GENERAL[ind,5:6]<- coordinates(norway_wgs84)
 ## 
-f <- loc2wgs(ind, loc_crs = utm32_ed50, "Norway(?!:Svalbard)")
+f <- loc2wgs(ind, loc_crs = utm32_ed50, "Norway") # "Norway(?!:Svalbard)"
+f[["fig2"]]
 hydi$GENERAL[ind, 5:6] <- f[["coord"]]
 
 
@@ -197,9 +223,9 @@ ngoVIII <- st_crs("+init=epsg:27398 ")
 
 # can't find the right projection...
 # norway_ngo_sp <- SpatialPoints(coord[coord[,1]!=-999,],proj4string=ngoI)
-# writePointsShape(norway_ngo_sp,fn="./gis/norway_ngo1")
+# writePointsShape(norway_ngo_sp,fn="../gis/norway_ngo1")
 # norway_wgs84 <- spTransform(norway_ngo_sp,wgs84)
-# writePointsShape(norway_wgs84,fn="./gis/norway_wgs84_2")
+# writePointsShape(norway_wgs84,fn="../gis/norway_wgs84_2")
 # #hydi$GENERAL[ind,5:6]<- coordinates(norway_wgs84)
 # 
 # fI <- loc2wgs(ind, loc_crs = ngoI, "Norway(?!:Svalbard)")
@@ -231,25 +257,34 @@ table(hydi$GENERAL$LOC_COOR_SYST[ind])
 # coord <- cbind(as.numeric(hydi$GENERAL[ind,2]),as.numeric(hydi$GENERAL[ind,3]))
 # czech_sp <- SpatialPoints(coord,proj4string=jtsk)
 # czech_wgs <- spTransform(czech_sp,wgs84)
-# writePointsShape(czech_sp,fn="./gis/czech_jtsk")
-# writePointsShape(czech_wgs,fn="./gis/czech_wgs")
+# writePointsShape(czech_sp,fn="../gis/czech_jtsk")
+# writePointsShape(czech_wgs,fn="../gis/czech_wgs")
 # hydi$GENERAL[ind,5:6]<- coordinates(czech_wgs)
 
 
 # check coordinates in box
 # hydi.wgs <- SpatialPointsDataFrame(hydi$GENERAL[hydi$GENERAL[,5]!=-999,5:6],data=hydi$GENERAL[hydi$GENERAL[,5]!=-999,c("PROFILE_ID","SOURCE")],proj4string=wgs84)
 hydi.wgs <-  st_as_sf(hydi$GENERAL[hydi$GENERAL[,5]!=-999,c("PROFILE_ID","SOURCE","X_WGS84", "Y_WGS84")], crs = 4326, coords = c("X_WGS84", "Y_WGS84"))
-sfworld = st_as_sf(map("world", plot=FALSE, fill = TRUE), crs = 4326)
+Europe <- ne_countries(scale = "medium", continent = "europe", returnclass = "sf")
+# sfeurope = st_as_sf(map("world", plot=FALSE, fill = TRUE), crs = 4326)
+eu_box = c(xmin = -25, xmax = 50, ymin = 23, ymax = 70)
+europe  <- st_cast(Europe, 'MULTILINESTRING') %>%
+  st_cast('LINESTRING', do_split=TRUE) %>%
+  mutate(npts = mapview::npts(geometry, by_feature = TRUE)) %>%
+  st_cast('POLYGON')
+eu_crop = st_crop(europe, st_bbox(eu_box))
+
 f1 <- ggplot2::ggplot() +
-  geom_sf(data = sfworld) +
+  geom_sf(data = eu_crop) +
   geom_sf(data = hydi.wgs, aes(colour = factor(SOURCE))) +
   # coord_sf(xlim = c(-11,45), ylim = c(35,72), lims_method = "box") +
+  coord_sf(crs = 3035) +
   ggtitle("EU-HYDI locations") 
 f1
 ggsave("../fig/hydi.png", width = 14, height = 7, units = "in")
 # map("world",xlim=c(-12,50),ylim=c(34,75))
 # points(hydi.wgs,col="red",pch=20)
-# writePointsShape(hydi.wgs,"./gis/hydi_wgs84")
+# writePointsShape(hydi.wgs,"../gis/hydi_wgs84")
 
 # CAUTION catch duplicated coordinates example in Norway 3267:3274
 pid <- hydi$GENERAL$PROFILE_ID[hydi$GENERAL$X_WGS84!=-999]
@@ -289,9 +324,10 @@ hydi$GENERAL$LU_L1[!grepl('0',s2)] <- paste(substr(s[!grepl('0',s2)],start=1,sto
 hydi$GENERAL$LU_L1[grepl('ND',s)] <- 'ND'
 
 # PUBL_REF: caution with doi and http
-hydi$GENERAL$PUBL_REF[grepl("Weynants.2011",hydi$GENERAL$PUBL_REF)] <- "Weynants.2011. Linking soil hydraulic properties to structure indicators Experiments and modelling. PhD thesis, UCL, Belgium. http://hdl.handle.net/2078.1/75972"
-hydi$GENERAL$PUBL_REF[grepl("doi:10.2136/sssaj2004",hydi$GENERAL$PUBL_REF)] <- "doi:10.2136/sssaj2004.0238"
-hydi$GENERAL$PUBL_REF[grepl("doi:10.1016/j.still.2008.03",hydi$GENERAL$PUBL_REF)] <- "doi:10.1016/j.still.2008.03.003"
+## grepl makes R crash!!!
+hydi$GENERAL$PUBL_REF[grepl("Weynants",hydi$GENERAL$PUBL_REF, fixed = TRUE)] <- "Weynants. 2011. Linking soil hydraulic properties to structure indicators Experiments and modelling. PhD thesis, UCL, Belgium. http://hdl.handle.net/2078.1/75972"
+hydi$GENERAL$PUBL_REF[grepl("doi:10.2136/sssaj2004",hydi$GENERAL$PUBL_REF, fixed = TRUE)] <- "doi:10.2136/sssaj2004.0238"
+hydi$GENERAL$PUBL_REF[grepl("doi:10.1016/j.still.2008.03",hydi$GENERAL$PUBL_REF, fixed = TRUE)] <- "doi:10.1016/j.still.2008.03.003"
 # 2023 add Schindler
 fname = curl::curl_download(url = "https://open-research-data.zalf.de/ResearchDataSets/1977_164_1.zip", "~/Downloads/1977_164_1.zip") %>% unzip(exdir = "~/Downloads")
 tmp <- XML::xmlToDataFrame(fname)
@@ -353,9 +389,9 @@ hydi$GENERAL$REL_T_SER <- "ND"
 # -	Sample 560008201 (Cornelis data) has ?NDMAND? for STRUCTURE1. This is according to the guidelines. However, massive structure should define the type of structure (i.e., MA should be moved to the last two letter). All other contributors placed MA in the last two spaces.
 
 # When MA or SG, use "    MA" and "    SG" respectively
-hydi$BASIC$STRUCTURE1 <- gsub("NDNDMA","    MA",hydi$BASIC$STRUCTURE1)
-hydi$BASIC$STRUCTURE1 <- gsub("NDNDSG","    SG",hydi$BASIC$STRUCTURE1)
-hydi$BASIC$STRUCTURE1 <- gsub("NDMAND","    MA",hydi$BASIC$STRUCTURE1)
+hydi$BASIC$STRUCTURE1 <- gsub("NDNDMA","    MA",hydi$BASIC$STRUCTURE1, fixed = TRUE)
+hydi$BASIC$STRUCTURE1 <- gsub("NDNDSG","    SG",hydi$BASIC$STRUCTURE1, fixed = TRUE)
+hydi$BASIC$STRUCTURE1 <- gsub("NDMAND","    MA",hydi$BASIC$STRUCTURE1, fixed = TRUE)
 
 
 # HOR1_NAME needs to be homogenized
@@ -645,16 +681,16 @@ hydi$COND$VALUE[hydi$COND$SOURCE%in%c("Mako","Housova","Lamorski") & hydi$COND$V
 # for each BASIC$SAMPLE_ID, must have: GENERAL:coordinates; ISO_COUNTRY; RC_L1; RC_L2; CONTACT_P; EMAIL; BASIC: SAMPLE_DEP_TOP; SAMPLE_DEP_BOT; BD; BD_M; COARSE; COARSE_M; CHEMICAL: OC, OC_M; PSIZE: sum=100+/-1, P_M; RET: HEAD, THETA; MEHTOD: CODE_M from other tables
 
 # PSD_EST: HARMONIZED PSD
-PSD_EST <- read.csv("../data/QAmeeting/PSIZE/PSIZE_2_50_2000_2013apr26.csv",as.is=TRUE)
+PSD_EST <- read.csv(file.path(path2data, "../QAmeeting/PSIZE/PSIZE_2_50_2000_2013apr26.csv"), as.is=TRUE)
 # Morari
-morari <- read.csv("../data/QAmeeting/PSIZE/PSIZE_2_50_2000_2013jun11.csv",as.is=TRUE)
+morari <- read.csv(file.path(path2data,"../QAmeeting/PSIZE/PSIZE_2_50_2000_2013jun11.csv"),as.is=TRUE)
 PSD_EST <- rbind(PSD_EST,morari)
 # correction for Norway
 # require(XLConnect)
-# wb <- loadWorkbook("../data/QAmeeting/PSIZE/ChangeEstimJune13.xlsx",create=FALSE)
+# wb <- loadWorkbook(file.path(path2data,"../QAmeeting/PSIZE/ChangeEstimJune13.xlsx"),create=FALSE)
 # newps <- readWorksheet(wb , "data to be updated")
 # 2023/07/02 use csv instead of xlsx
-newps <- read.csv("../data/QAmeeting/PSIZE/ChangeEstimJune13_data2update.csv", as.is = TRUE)
+newps <- read.csv(file.path(path2data,"../QAmeeting/PSIZE/ChangeEstimJune13_data2update.csv"), as.is = TRUE)
 PSD_EST[match(newps$SAMPLE_ID,PSD_EST$SAMPLE_ID),c("USSILT","USSAND")] <- newps[,4:5]
 # put in hydi
 hydi$PSD_EST <- cbind(PROFILE_ID=floor(PSD_EST$SAMPLE_ID/100),PSD_EST[,1:8])
@@ -666,7 +702,7 @@ hydi$PSIZE <-  hydi$PSIZE[hydi$PSIZE$SAMPLE_ID %in% hydi$BASIC$SAMPLE_ID,]
 
 # map
 # hydi.wgs <- SpatialPointsDataFrame(hydi$GENERAL[hydi$GENERAL[,5]!=-999,5:6],data=hydi$GENERAL[hydi$GENERAL[,5]!=-999,c("PROFILE_ID","SOURCE")],proj4string=wgs84)
-# writePointsShape(hydi.wgs,"./gis/hydi_wgs84")
+# writePointsShape(hydi.wgs,"../gis/hydi_wgs84")
 ind <- hydi$GENERAL[,5]!=-999
 x <- hydi$GENERAL[ind,5]
 y <- hydi$GENERAL[ind,6]
