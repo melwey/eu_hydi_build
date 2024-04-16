@@ -3,7 +3,7 @@
 # Author: M. Weynants
 # Date created: 2013/05/30
 ######################################################
-mov.filter <- function(data,N,method=c("median","mean")){
+mov_filter <- function(data,N,method=c("median","mean")){
 output<-as.data.frame(matrix(NA,nrow=nrow(data)/N,ncol=2))
 names(output)<-names(data)
 indc=0
