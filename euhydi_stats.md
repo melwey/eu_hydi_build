@@ -8,7 +8,7 @@ Number of entries: 6014
 
 *Minimal requirements* 
 
-Geographical coordinates: 94.56 %
+Geographical coordinates (mostly degraded, hence not suitable for high resolution spatial analyses): 94.11 %
 
 *Other data* 
 
@@ -112,7 +112,7 @@ DAY : 41.3 %
 
 SURVEYOR_P : 13.49 %
 
-PUBL_REF : 19.22 %
+PUBL_REF : 20.09 %
 
 CONTACT_P : 100 %
 

@@ -12,7 +12,7 @@ cat("*Minimal requirements* \n\n", file = "../euhydi_stats.md", append = TRUE)
 # coordinates
 ind <- !is.na(GENERAL$X_WGS84)
 pcor <- sum(ind)/Np*100
-cat(paste("Geographical coordinates:",round(pcor,digit=2),"%\n\n"), file = "../euhydi_stats.md", append = TRUE)
+cat(paste("Geographical coordinates (mostly degraded, hence not suitable for high resolution spatial analyses):",round(pcor,digit=2),"%\n\n"), file = "../euhydi_stats.md", append = TRUE)
 
 cat("*Other data* \n\n", file = "../euhydi_stats.md", append = TRUE)
 pG <- pcor
