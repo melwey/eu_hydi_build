@@ -33,7 +33,7 @@ return(output)
 # points(THETA~log10(HEAD),data=D3,col="red",pch=3)
 
 # to be changed: needs to work only in the range where diff(h) is small
-h.filter <- function(data){
+h_filter <- function(data){
 output<-as.data.frame(matrix(NA,nrow=1,ncol=2))
 names(output)<-names(as.data.frame(data))
 d <- data[order(data[,1]),]
@@ -43,12 +43,12 @@ d <- d[!duplicated(d),]
 if (any(duplicated(d[,1]))){
 wdup <- which(duplicated(d[,1]))
 hu<-unique(d[wdup,1])
-d.a <- d[! d[,1] %in% hu,]
+d_a <- d[! d[,1] %in% hu,]
 for (ih in hu){
-d.a <- rbind(d.a,colMeans(d[d[,1]==ih,]))
+d_a <- rbind(d_a,colMeans(d[d[,1]==ih,]))
 }
 # sort again
-d <- d.a[order(d.a[,1]),]
+d <- d_a[order(d_a[,1]),]
 }
 # keep first measurement
 output[1,] <- d[1,]
@@ -66,7 +66,7 @@ output <- rbind(output,d[indr,])
 return(output)
 }
 
-# new <- h.filter(D)
+# new <- h_filter(D)
 
 # plot(THETA~log10(HEAD),data=D)
 # points(THETA~log10(HEAD),data=new,col="red")

@@ -4,8 +4,8 @@
 ###############################################################################
 # 
 require(optimx)
-# MV.SS: generate initial guess for MV optimisation
-MV.SS <- function(h,theta){
+# MV_SS: generate initial guess for MV optimisation
+MV_SS <- function(h,theta){
 	# determine par0: starting point for optimisation of par
 	# h must be positive
 	ind <- h <= 0;	h[ind] <- -h[ind]
@@ -21,31 +21,31 @@ MV.SS <- function(h,theta){
 	approxD <- diff(xy$y)/diff(log(xy$x))
 	i <- which(approxD==min(approxD[2:(length(approxD)-1)]))
 	if (length(i)>1){i=i[2]}
-	# h.infl = 1/alp*(m)^(1/n) (root of d2theta/dh2)
-	h.infl <- xy$x[i]+exp(diff(log(xy$x))[i])/2
+	# h_infl = 1/alp*(m)^(1/n) (root of d2theta/dh2)
+	h_infl <- xy$x[i]+exp(diff(log(xy$x))[i])/2
 	# linear approx at inflection point
-	s.infl <- approxD[i]
-	# replacing alp by alp(h.infl) in dtheta/dh = -(ths-thr)*m*n*alp^n*h^n*(1+(alp*h)^n)^(-m-1)
-	s.infl.x <- -s.infl/(ths0-thr0) # =m^2/(1-m)*(1+m)^(-m-1)
-	m0 <- 1-0.27/(s.infl.x+0.27) # approximation from plot of s.infl=f(m)
+	s_infl <- approxD[i]
+	# replacing alp by alp(h_infl) in dtheta/dh = -(ths-thr)*m*n*alp^n*h^n*(1+(alp*h)^n)^(-m-1)
+	s_infl_x <- -s_infl/(ths0-thr0) # =m^2/(1-m)*(1+m)^(-m-1)
+	m0 <- 1-0.27/(s_infl_x+0.27) # approximation from plot of s_infl=f(m)
 	n0 <- 1/(1-m0) # by definition of MV
-	alp0 <- 1/h.infl*m0^(1/n0)
+	alp0 <- 1/h_infl*m0^(1/n0)
 	list(thr=thr0,ths=ths0,alp=alp0,n=n0,m=m0,Ks=NA,L=NA)	
 }
-OF.VG.ls <- function(par,h.obs,theta.obs,weight=rep(1,length(h.obs))){
+OF_VG_ls <- function(par,h_obs,theta_obs,weight=rep(1,length(h_obs))){
 	par <- as.list(par)
 	if (par$alp<0){par$alp <- 10^(par$alp);par$n<-10^(par$n)+1}
 	if (!("m" %in% names(par))){par$m=1-1/par$n}
 	if (!("Ks" %in% names(par))){par$Ks=NA}
 	if (!("L" %in% names(par))){par$L=NA}
-	mv <- MV(par,h=h.obs)
-	theta.sim <- mv$theta
-	OF <- sum(weight*(theta.obs-theta.sim)^2)
+	mv <- MV(par,h=h_obs)
+	theta_sim <- mv$theta
+	OF <- sum(weight*(theta_obs-theta_sim)^2)
 	OF
 }
 
 # Use:
-# MV.opt <- optimx(par=par0,fn=OF.MV.ls,h.obs=h,theta.obs=th)
+# MV_opt <- optimx(par=par0,fn=OF_MV_ls,h_obs=h,theta_obs=th)
 
 
 #selfStart "initial" attribute in SSvan
