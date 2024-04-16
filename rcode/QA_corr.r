@@ -17,7 +17,7 @@ unique(hydi$GENERAL[hydi$GENERAL$X_WGS!=-999,c("SOURCE","LOC_COOR_SYST")])
 # packages no longer maintained after 2023
 # use sf instead
 library(sf)
-# require("maps")
+require("maps")
 library(rnaturalearth)
 library(rnaturalearthdata)
 require(foreign)
@@ -182,29 +182,29 @@ hydi$GENERAL[ind, 5:6] <- f[["coord"]]
 print("Kvaerno")
 ind <- hydi$GENERAL$SOURCE=="Kvaerno" & hydi$GENERAL$X_WGS84==-999
 table(hydi$GENERAL$LOC_COOR_SYST[ind])
-# UTM32  ??? what datum?
+# UTM32  ??? what datum? Somehow now they already have wgs
 # NGOc (what zone?)
 # NGO (what zone?)
 # 1914 III ????
 
-ind <- hydi$GENERAL$SOURCE=="Kvaerno" & hydi$GENERAL$LOC_COOR_SYST=="UTM32" & hydi$GENERAL$X_WGS84==-999
-utm32_ed50 <- st_crs(23032) # st_crs("+init=epsg:23032 +towgs84=-87,-95,-120")
-utm32_grs <- st_crs(25832) # st_crs("+init=epsg:25832")
-utm32_wgs <- st_crs(32632) # st_crs("+init=epsg:32632")
-# choosing one datum or the other there is a shift of about 215 m between points. But I have no way to know which is correct... (samples taken in the 90's)
-##
-# coord <- cbind(as.numeric(hydi$GENERAL[ind,2]),as.numeric(hydi$GENERAL[ind,3]))
-# 
-# norway_utm32_sp <- SpatialPoints(coord[coord[,1]!=-999,],proj4string=utm32_ed50)
-# #writePointsShape(norway_utm32_sp,fn="../gis/norway_utm32")
-# # transform
-# norway_wgs84 <- spTransform(norway_utm32_sp,wgs84)
-# writePointsShape(norway_wgs84,fn="../gis/norway_wgs84_1")
-# hydi$GENERAL[ind,5:6]<- coordinates(norway_wgs84)
-## 
-f <- loc2wgs(ind, loc_crs = utm32_ed50, "Norway") # "Norway(?!:Svalbard)"
-f[["fig2"]]
-hydi$GENERAL[ind, 5:6] <- f[["coord"]]
+# ind <- hydi$GENERAL$SOURCE=="Kvaerno" & hydi$GENERAL$LOC_COOR_SYST=="UTM32" & hydi$GENERAL$X_WGS84==-999
+# utm32_ed50 <- st_crs(23032) # st_crs("+init=epsg:23032 +towgs84=-87,-95,-120")
+# utm32_grs <- st_crs(25832) # st_crs("+init=epsg:25832")
+# utm32_wgs <- st_crs(32632) # st_crs("+init=epsg:32632")
+# # choosing one datum or the other there is a shift of about 215 m between points. But I have no way to know which is correct... (samples taken in the 90's)
+# ##
+# # coord <- cbind(as.numeric(hydi$GENERAL[ind,2]),as.numeric(hydi$GENERAL[ind,3]))
+# # 
+# # norway_utm32_sp <- SpatialPoints(coord[coord[,1]!=-999,],proj4string=utm32_ed50)
+# # #writePointsShape(norway_utm32_sp,fn="../gis/norway_utm32")
+# # # transform
+# # norway_wgs84 <- spTransform(norway_utm32_sp,wgs84)
+# # writePointsShape(norway_wgs84,fn="../gis/norway_wgs84_1")
+# # hydi$GENERAL[ind,5:6]<- coordinates(norway_wgs84)
+# ## 
+# f <- loc2wgs(ind, loc_crs = utm32_ed50, "Norway") # "Norway(?!:Svalbard)"
+# f[["fig2"]]
+# hydi$GENERAL[ind, 5:6] <- f[["coord"]]
 
 
 ind <- hydi$GENERAL$SOURCE=="Kvaerno" & hydi$GENERAL$LOC_COOR_SYST=="NGO" & hydi$GENERAL$X_WGS84==-999
@@ -248,7 +248,7 @@ ngoVIII <- st_crs("+init=epsg:27398 ")
 # can't find the right projection...
 
 
-# Matula
+print("Matula")
 # S-JTSK / Krovak East North (epsg::5514); towgs84 epsg::15965
 
 # jtsk <- CRS("+proj=krovak +ellps=bessel +pm=greenwich +lat_0=49.5  +lon_0=24.833333 +k_0=0.9999 +x_0=0 +y_0=0 +unit=m +towgs84=589,76,480")
@@ -342,12 +342,12 @@ f1 <- ggplot2::ggplot() +
           aes(colour = SOURCE), shape = 1)
 f1
 # geog locations from Schindler_HYPRES do not completely correspond with published data (they're supposed to be the same however)
-hydi$GENERAL$PUBL_REF[grepl("Schindler_HYPRES")] <- "doi:10.5194/essd-2-189-2010"
+hydi$GENERAL$PUBL_REF[grepl("Schindler_HYPRES",hydi$GENERAL$SOURCE)] <- "doi:10.5194/essd-2-189-2010"
 # data from Schindler included in EU-HYDI HAVE NOT been published elsewhere it seems
 
 # recoding by country?
 
-# CONTACT_A
+print("CONTACT_A")
 #unique(hydi$GENERAL$SOURCE[hydi$GENERAL$CONTACT_A=="ND"])
 df <- data.frame(source = c("Iovino","Katterer","Schindler","Shein","Javaux","Daroussin","Romano","Lamorski","Strauss","Cornelis", "Morari"),
                  address = c("Dipartimento dei Sistemi Agro-Ambientali, Università degli Studi di Palermo",
@@ -383,7 +383,7 @@ hydi$GENERAL$EMAIL[grepl("Romano",hydi$GENERAL$SOURCE)] <-"nunzio.romano@unina.i
 # REL_T_SER as text
 hydi$GENERAL$REL_T_SER <- "ND"
 
-# BASIC
+print("BASIC")
 # Maria da Conceicao comment:
 # -	For STRUCTURE1 and STRUCTURE 2 some contributors define ?Massive? and ?Single Grain? structures as ?NDNDMA? and ?NDNDSG?, respectively. Others define it as ?    MA? and ?    SG?. What should the correct form be? ND stands for ?unknown? or ?not determined?. In those type of structures the grade and size class do not exist.
 # -	Sample 560008201 (Cornelis data) has ?NDMAND? for STRUCTURE1. This is according to the guidelines. However, massive structure should define the type of structure (i.e., MA should be moved to the last two letter). All other contributors placed MA in the last two spaces.
@@ -462,7 +462,7 @@ hydi$BASIC[[j]][hydi$BASIC[[k]]==-999]<- -999
 #hydi$METHOD[(grepl("Schindler",hydi$METHOD$SOURCE) | hydi$METHOD$SOURCE=="HYPRES" )& hydi$METHOD$METH_PAR=="BD_M",]
 hydi$BASIC$BD_M[hydi$BASIC$SOURCE=="Schindler_HYPRES" & hydi$BASIC$BD_M != -999] <- unique(hydi$BASIC[hydi$BASIC$SOURCE=="Schindler" & hydi$BASIC$BD!=-999,"BD_M"])
 
-# CHEMICAL
+print("CHEMICAL")
 # Correct SAMPLE_ID in SOURCE="Patyka"
 hydi$CHEMICAL$SAMPLE_ID[hydi$CHEMICAL$SAMPLE_ID %in% c(8070047701:8070047706)] <- 8040047701:8040047706
 # remove SAMLPE_ID not in BASIC
@@ -499,12 +499,12 @@ hydi$CHEMICAL[ind,c("SAMPLE_ID","BASE_CATIONS","CEC")]
 # I would leave them like that: measurement methods are different and hence can lead to different values.
 # The user can create a CEC_cor if they wish.
 
-# PSIZE
+print("PSIZE")
 # do all modifications on a copy:
 psize <- hydi$PSIZE
 
 # PSIZE adjustements by Attila from "SCHINDLER PSIZE QUERY FEB 17.xlsx"
-ps.new <- read.csv("SCHINDLER_PSIZE_adj.csv",header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
+ps.new <- read.csv(paste0(path2data,"/Rcode/SCHINDLER_PSIZE_adj.csv"),header=TRUE,as.is=TRUE,blank.lines.skip=TRUE)
 # replace values
 ind <- match(paste(psize$SAMPLE_ID,psize$P_SIZE),
 paste(ps.new$SAMPLE_ID,ps.new$P_SIZE))
@@ -628,7 +628,7 @@ hydi$PSIZE$P_SIZE[hydi$PSIZE$SAMPLE_ID == 3800025001 & hydi$PSIZE$P_PERCENT==3.2
 hydi$PSIZE <- hydi$PSIZE[! (hydi$PSIZE$SAMPLE_ID == 8040004802 & hydi$PSIZE$P_PERCENT==-999),]
 
 
-# RET
+print("RET")
 # average duplicates?
 # randomly pick data in evaporation method (by range)
 # pF0 instead of HEAD=0
@@ -656,7 +656,7 @@ hydi$RET$FLAG[hydi$RET$SAMPLE_ID==560001902 & hydi$RET$HEAD %in% c(200,340)] <- 
 hydi$RET$FLAG[hydi$RET$SAMPLE_ID==2760058702 & hydi$RET$HEAD >250] <- FALSE
 hydi$RET$FLAG[hydi$RET$SAMPLE_ID==2760058703 & hydi$RET$HEAD >250] <- FALSE
 
-# COND
+print("COND")
 # average duplicates? (to avoid too much weight in the optimization)
 # filter conductivity data larger than 10000?
 d <- hydi$COND[hydi$COND$VALUE <= 1,]
@@ -680,7 +680,7 @@ hydi$COND$VALUE[hydi$COND$SOURCE%in%c("Mako","Housova","Lamorski") & hydi$COND$V
 # Meet minimum requirements: add a column to BASIC (logical)
 # for each BASIC$SAMPLE_ID, must have: GENERAL:coordinates; ISO_COUNTRY; RC_L1; RC_L2; CONTACT_P; EMAIL; BASIC: SAMPLE_DEP_TOP; SAMPLE_DEP_BOT; BD; BD_M; COARSE; COARSE_M; CHEMICAL: OC, OC_M; PSIZE: sum=100+/-1, P_M; RET: HEAD, THETA; MEHTOD: CODE_M from other tables
 
-# PSD_EST: HARMONIZED PSD
+print("PSD_EST: HARMONIZED PSD")
 PSD_EST <- read.csv(file.path(path2data, "../QAmeeting/PSIZE/PSIZE_2_50_2000_2013apr26.csv"), as.is=TRUE)
 # Morari
 morari <- read.csv(file.path(path2data,"../QAmeeting/PSIZE/PSIZE_2_50_2000_2013jun11.csv"),as.is=TRUE)
@@ -700,7 +700,7 @@ hydi$GENERAL <- hydi$GENERAL[hydi$GENERAL$PROFILE_ID %in% hydi$BASIC$PROFILE_ID,
 hydi$CHEMICAL <- hydi$CHEMICAL[hydi$CHEMICAL$SAMPLE_ID %in% hydi$BASIC$SAMPLE_ID,]
 hydi$PSIZE <-  hydi$PSIZE[hydi$PSIZE$SAMPLE_ID %in% hydi$BASIC$SAMPLE_ID,]
 
-# map
+print("map")
 # hydi.wgs <- SpatialPointsDataFrame(hydi$GENERAL[hydi$GENERAL[,5]!=-999,5:6],data=hydi$GENERAL[hydi$GENERAL[,5]!=-999,c("PROFILE_ID","SOURCE")],proj4string=wgs84)
 # writePointsShape(hydi.wgs,"../gis/hydi_wgs84")
 ind <- hydi$GENERAL[,5]!=-999
@@ -710,7 +710,7 @@ wgs84<-st_crs("EPSG:4326")
 map("world",xlim=c(-12,30),ylim=c(35,60))
 # replace sp::SpatialPoints by 
 # points(SpatialPoints(cbind(x,y),proj4string=wgs84),col="blue")
-points(st_multipoint(cbind(x,y, hydi$GENERAL), wgs84),col="blue", pch = ".", cex = 4)
+points(st_multipoint(cbind(x,y), wgs84),col="blue", pch = ".", cex = 4)
 
 
 europe = c("Austria", "Belgium", "Czechia", "Denmark", "Finland", "France", "Germany", "Greece", "Hungary", "Italy", "Norway", "Poland", "Portugal", "Russia", "Slovakia", "Spain", "Sweden", "Ukraine", "United Kingdom")
