@@ -1,5 +1,5 @@
 # eu_hydi_build
-[![DOI](https://zenodo.org/badge/10987813.svg)](https://zenodo.org/badge/latestdoi/10987813)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10987813.svg)](https://doi.org/10.5281/zenodo.10987813)
 
 Import, clean and harmonize data for the European Hydrolopedological Inventory (EU-HYDI).
 
