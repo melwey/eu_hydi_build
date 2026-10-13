@@ -10,11 +10,20 @@ This repository contains all R scripts used to import, clean and harmonize the d
 
 ## Workflow
 
-The workflow is executed from [rcode/ReadMe.r](./rcode/ReadMe.r). Raw data should be stored in ./data.
+The workflow is executed from [`./rcode/ReadMe.r`](./rcode/ReadMe.r). Raw data should be stored in `./data`.
+
+### TO DO 2026
+
+[] Houskova: update institution to NPPC - Department of Soil Science and Soil Protection, former Soil Science and Conservation Research Institute
+[] update database structure: store contact_p, contact_a, email and possibly references in another table
 
 ## Summary
 
 A summary of the dataset completeness can be found in [euhydi_stats.md](./euhydi_stats.md)
+
+### TO DO 2026
+
+[] add names of the variables in covergae stats
 
 ## Reference
 Weynants, M., Montanarella, L., Tóth, G., Arnoldussen, A., Anaya Romero, M., Bilas, G., Borresen T., Cornelis W., Daroussin J., Gonalves M., Hannam J., Haugen L.E., Hennings V., Houskova B., Iovino M., Javaux M., Keay C.A., Kätterer T., Kvaerno S., Laktinova T., Lamorski K., Lilly A., Mako A., Matula S., Morari F., Nemes A., Patyka N.V., Romano N., Schindler U., Shein E., Slawinski C., Strauss P, Tóth B., Wösten, H. (2013). European HYdropedological data inventory (EU-HYDI). EUR – Scientific and Technical Research series – vol. EUR 26053 EN. Publications Office of the European Union, Luxembourg, GD Luxembourg. https://doi.org/10.2788/5936
